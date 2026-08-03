@@ -170,6 +170,20 @@
         font-family: var(--mono);
         font-size: 15px;
       }
+      /* Deployed-addresses card: label above the full 42-char address, so a
+         judge can paste straight into Basescan rather than trust a truncation. */
+      .row .k {
+        display: block;
+        font-size: 12px;
+        color: var(--ink-45);
+        letter-spacing: 0.02em;
+      }
+      .fulladdr {
+        font-family: var(--mono);
+        font-size: 15px;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
 
       /* Cover and the dark slides */
       .slide.dark {
@@ -356,15 +370,30 @@
         <div class="grid2" style="margin-top: 30px; align-items: start">
           <div class="card">
             <div class="eyebrow">Deployed, Base Sepolia 84532</div>
-            <div style="margin-top: 12px">
-              <div class="kv"><span class="k">KudiraPool</span><span class="addr">0x4a89…199e</span></div>
-              <div class="kv"><span class="k">CreditLine</span><span class="addr">0x49cD…3974</span></div>
-              <div class="kv"><span class="k">InstallmentPlan</span><span class="addr">0xb4c0…39D8</span></div>
-              <div class="kv"><span class="k">MerchantRegistry</span><span class="addr">0x05e2…bB15</span></div>
-              <div class="kv"><span class="k">KUSDC settlement</span><span class="addr">0x036B…Ab1E</span></div>
+            <div style="margin-top: 14px; display: grid; gap: 11px">
+              <div class="row">
+                <span class="k">KudiraPool</span>
+                <span class="fulladdr">0x4a898781AFAd85BE7103126952BcBbFCCC24199e</span>
+              </div>
+              <div class="row">
+                <span class="k">CreditLine</span>
+                <span class="fulladdr">0x49cD6c00EC00116Eed598b8e07f1B0D7A4805cBE</span>
+              </div>
+              <div class="row">
+                <span class="k">InstallmentPlan</span>
+                <span class="fulladdr">0xb4c055e7e880A684F9276435BDc12d25577d39D8</span>
+              </div>
+              <div class="row">
+                <span class="k">MerchantRegistry</span>
+                <span class="fulladdr">0x05e2A2473e710435484f6B3b288677618E95bB15</span>
+              </div>
+              <div class="row">
+                <span class="k">KUSDC settlement</span>
+                <span class="fulladdr">0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E</span>
+              </div>
             </div>
-            <p style="font-size: 14px; color: var(--ink-45); margin-top: 12px">
-              Registered as a Cleanverse compliance pool. Full addresses and hashes in the repo.
+            <p style="font-size: 13px; color: var(--ink-45); margin-top: 14px">
+              Registered as a Cleanverse compliance pool. Paste any address into Basescan.
             </p>
           </div>
           <div style="display: grid; gap: 18px">
