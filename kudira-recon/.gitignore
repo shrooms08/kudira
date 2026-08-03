@@ -1,0 +1,13 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+
+# Recon output may contain address data; keep local
+recon-results.json
+
+# Decoded design bundles — derived artifacts, regenerate per design/TOKENS.md §8
+design/*.page.html

@@ -1,0 +1,9 @@
+# Foundry build artifacts
+out/
+cache/
+broadcast/
+
+# Deployment secrets — never commit
+.env
+.env.*
+!.env.example

@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* Kudira design tokens. Extracted from design/*.html — see design/TOKENS.md.
+   Defined ONCE here rather than copied inline from the bundles. */
+
+:root {
+  /* Core */
+  --ink: #14161f;
+  --ink-raised: #23262f;
+  --amber: #e9a13b;
+  --amber-light: #f2b25b;
+  --amber-deep: #d8912e;
+  --amber-ink: #b87516;
+  --amber-shadow: #8a5610;
+
+  /* Warm neutrals */
+  --paper: #faf8f5;
+  --paper-sunk: #efebe4;
+  --paper-amber: #fdf7ec;
+  --white: #ffffff;
+
+  /* Ink alphas — text hierarchy. 0.68 is the workhorse secondary. */
+  --ink-90: rgba(20, 22, 31, 0.9);
+  --ink-82: rgba(20, 22, 31, 0.82);
+  --ink-75: rgba(20, 22, 31, 0.75);
+  --ink-72: rgba(20, 22, 31, 0.72);
+  --ink-68: rgba(20, 22, 31, 0.68);
+  --ink-62: rgba(20, 22, 31, 0.62);
+  --ink-55: rgba(20, 22, 31, 0.55);
+  --ink-45: rgba(20, 22, 31, 0.45);
+
+  /* Ink alphas — hairlines and shadow. 0.08 is the default divider. */
+  --ink-22: rgba(20, 22, 31, 0.22);
+  --ink-16: rgba(20, 22, 31, 0.16);
+  --ink-12: rgba(20, 22, 31, 0.12);
+  --ink-10: rgba(20, 22, 31, 0.1);
+  --ink-08: rgba(20, 22, 31, 0.08);
+  --ink-06: rgba(20, 22, 31, 0.06);
+  --ink-04: rgba(20, 22, 31, 0.04);
+
+  /* White alphas — on dark surfaces, and the glass fill */
+  --white-72: rgba(255, 255, 255, 0.72);
+  --white-60: rgba(255, 255, 255, 0.6);
+  --white-40: rgba(255, 255, 255, 0.4);
+  --white-09: rgba(255, 255, 255, 0.09);
+
+  /* THE elevation. Two layers: 1px contact + wide soft ambient. */
+  --shadow-card: 0 1px 2px rgba(20, 22, 31, 0.04), 0 8px 24px rgba(20, 22, 31, 0.06);
+  --shadow-row: 0 1px 3px rgba(20, 22, 31, 0.1);
+  --shadow-up: 0 -8px 32px rgba(20, 22, 31, 0.06);
+  --shadow-cta: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 8px 18px -8px rgba(216, 145, 46, 0.8);
+
+  /* Radii */
+  --r-sheet: 28px;
+  --r-card: 24px;
+  --r-inner: 18px;
+  --r-input: 12px;
+  --r-pill: 999px;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-amber: var(--amber);
+  --color-amber-deep: var(--amber-deep);
+  --color-amber-ink: var(--amber-ink);
+  --color-paper: var(--paper);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-paper-amber: var(--paper-amber);
+  --font-serif: var(--font-source-serif);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  /* Only 500 and 600 exist in the design. There is no 400 and no 700. */
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  color: var(--amber-ink);
+}
+
+/* --- Reusable pieces of the design language ------------------------------- */
+
+/* Uppercase section label: 10-11px + 0.18em tracking. Used everywhere. */
+.eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* EVERY number is IBM Plex Mono. It is monospaced, so figures align in columns
+   without needing font-variant-numeric. If a figure ever renders in Plex Sans,
+   add tabular-nums there or the column will break. */
+.num {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* GLASS. Permitted on exactly two elements: the sticky checkout pay bar and the
+   floating bottom nav. NEVER behind a number — blur costs legibility on exactly
+   the element that has to be trusted. Anything else that wants this wants
+   elevation instead: use .card. */
+.glass {
+  background: var(--white-72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.btn-amber {
+  background: linear-gradient(180deg, var(--amber-light), var(--amber-deep));
+  color: var(--ink);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-cta);
+  font-weight: 600;
+}
+.btn-amber:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: not-allowed;
+}

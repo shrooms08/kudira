@@ -1,0 +1,18 @@
+{
+  "name": "kudira-recon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only recon probes for the Cleanverse sandbox API. No product code.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "recon": "node recon.js",
+    "verify-monad": "node verify-monad.js",
+    "verify-usage": "node verify-usage.js",
+    "test:crypto": "node src/lib/cleanverse-crypto.test.js",
+    "prove-aes": "node scripts/prove-aes.js",
+    "pulse": "node scripts/check-pulse.js"
+  }
+}

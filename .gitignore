@@ -1,0 +1,29 @@
+# Secrets — the Cleanverse AES key must never be committed
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/lib/
+
+# Next.js
+app/.next/
+app/out/
+app/next-env.d.ts
+app/.vercel/
+app/tsconfig.tsbuildinfo
+
+# Derived design artifacts — regenerate per design/TOKENS.md §8
+design/*.page.html
+
+# Recon output may contain address data
+kudira-recon/recon-results.json
+
+# OS
+.DS_Store
