@@ -181,15 +181,38 @@ activation lets the pool pay it. Having one without the other fails at originati
 `MerchantNotActive`, and the two are granted by different keys: registration is
 `onlyOwner`, origination is `onlyOperator`.
 
-**The Travel Rule indexing boundary.** `download_travel_rule` returns `TR_001 Transaction
-not found` for our settlements, and the reason is precise rather than a dead end. The same
-call with another institution's wallet returns `CV_100 Wallet not found for this customer`.
-That contrast isolates the cause: ownership scoping passes and only the transaction lookup
-fails. Travel Rule reporting is bound to Cleanverse's indexed settlement flow, and KUSDC,
-a CVA with no deposit pair, sits outside it. Settle in aUSDC and the record
-generates. The compliance layer is not missing; our asset is outside its index. The
-merchant dashboard calls the live endpoint and renders that explanation next to the actual
-response, because a live failure with a correct diagnosis is worth more than a mocked PDF.
+**The Travel Rule reports settlements, not mints.** `download_travel_rule` returns
+`TR_001 Transaction not found` for our KUSDC settlements, and the reason is precise rather
+than a dead end. A report is only generated for a transfer between two of Cleanverse's own
+customers, inside its indexed settlement flow, and we proved every part of that. Requesting
+a report for another institution's wallet returns `CV_100 Wallet not found for this
+customer`, so ownership scoping is a separate check that passes. We then drove a real aUSDC
+settlement to confirm the positive case: a 5 aUSDC transfer between two credentialed wallets
+we own, treasury to merchant payout
+(`0xb91c3783a3c30deb906a94ec34e5630010d890607418f15bc49f6bd8a8884b81`), returned `code 0000`
+with a live report `downloadUrl`, scoped correctly to either party. The subtlety this
+exposes: aUSDC obtained from Cleanverse's institution faucet arrives as a **mint from
+`address(0)`**, which has no originator, and `download_travel_rule` returns `TR_001` for it
+even twenty minutes on. A mint is not a settlement. KUSDC, our own CVA, sits outside the
+indexed flow entirely, which is why its transfers never report. The merchant dashboard calls
+the live endpoint and renders that diagnosis next to the actual response, because a live
+failure with a correct explanation is worth more than a mocked PDF.
+
+**Why the settlement asset stayed KUSDC.** When Cleanverse's Base institution faucet
+refilled, from 0.2 to about 995 origin USDC, we tested whether we could settle in aUSDC
+after all, since aUSDC is the asset the Travel Rule indexes. The conversion works: origin
+USDC sent to a pool's deposit address by a whitelisted institution is minted through as
+aUSDC. Two facts still closed the door. First, the faucet dispenses **5 units per call and
+caps at 20 per deposit address per 24 hours** (`faucet amount exceeds limit: 20 in 24h, max
+20`), so a faithful run of our 130-principal demo needs about 260 aUSDC: multi-day grinding
+across many deposit addresses, or a six-fold cut to the demo numbers. Second, the **two-USDC
+trap**: the origin token the Cleanverse `usdc -> ausdc` pair recognises is
+`0x543b96420d072BF587B63C41C0B0922762E986Ce`, a Cleanverse-owned contract, not Circle's
+public Base Sepolia USDC `0x036CbD53842c5426634e7929541eC2318f3dCF7e`. Same name, same
+symbol, different contract, so USDC drawn from Circle's public faucet lands in the deposit
+wallet and never converts. aUSDC is reachable on Base, but not at a throughput, nor through
+a public faucet, that makes it a viable settlement asset for this demo. We stay on KUSDC,
+and the choice is now evidence-backed rather than assumed.
 
 ## Repository
 
