@@ -1,640 +1,349 @@
-<!doctype html>
+<!--
+  Kudira pitch deck.
+  Self-contained. Open in Chrome, Cmd+P, Save as PDF.
+  In the print dialog: Layout Landscape, Margins None,
+  Background graphics ON, Headers and footers OFF.
+  Do the print pass online so the three fonts embed.
+-->
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kudira pitch</title>
-    <!-- Fonts are Google-hosted. Offline, the deck falls back to system serif,
-         sans and monospace: layout and colour hold, only the typefaces change.
-         For a fully self-contained PDF, print while online (see the note at the
-         end of the file). -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --ink: #14161f;
-        --ink-raised: #23262f;
-        --amber: #e9a13b;
-        --amber-light: #f2b25b;
-        --amber-deep: #d8912e;
-        --amber-ink: #b87516;
-        --paper: #faf8f5;
-        --paper-sunk: #efebe4;
-        --paper-amber: #fdf7ec;
-        --white: #ffffff;
-        --ink-72: rgba(20, 22, 31, 0.72);
-        --ink-68: rgba(20, 22, 31, 0.68);
-        --ink-62: rgba(20, 22, 31, 0.62);
-        --ink-45: rgba(20, 22, 31, 0.45);
-        --ink-08: rgba(20, 22, 31, 0.08);
-        --ink-06: rgba(20, 22, 31, 0.06);
-        --white-72: rgba(255, 255, 255, 0.72);
-        --white-45: rgba(255, 255, 255, 0.45);
-        --white-12: rgba(255, 255, 255, 0.12);
-        --shadow-card: 0 1px 2px rgba(20, 22, 31, 0.04), 0 8px 24px rgba(20, 22, 31, 0.06);
-        --serif: "Source Serif 4", Cambria, Georgia, serif;
-        --sans: "IBM Plex Sans", system-ui, sans-serif;
-        --mono: "IBM Plex Mono", ui-monospace, monospace;
-        --s: 0.72;
-      }
+<head>
+<meta charset="utf-8">
+<title>Kudira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161F;
+    --ink-soft:#1E212D;
+    --amber:#E9A13B;
+    --amber-deep:#B87516;
+    --paper:#FAF8F5;
+    --paper-sunk:#F1EEE9;
+    --paper-amber:#FBF3E6;
+    --white:#FFFFFF;
+    --ink-68:rgba(20,22,31,.68);
+    --ink-45:rgba(20,22,31,.45);
+    --ink-08:rgba(20,22,31,.08);
+    --serif:'Source Serif 4',Cambria,Georgia,serif;
+    --sans:'IBM Plex Sans',-apple-system,Segoe UI,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#6b6b6b;font-family:var(--sans);-webkit-font-smoothing:antialiased}
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+  .slide{
+    width:1280px;height:720px;margin:24px auto;position:relative;overflow:hidden;
+    background:var(--white);color:var(--ink);
+    padding:64px 72px;display:flex;flex-direction:column;
+  }
+  .slide.dark{background:var(--ink);color:var(--white)}
+  .slide.paper{background:var(--paper)}
 
-      body {
-        background: var(--paper-sunk);
-        font-family: var(--sans);
-        font-weight: 500;
-        -webkit-font-smoothing: antialiased;
-        padding: 20px 0 40px;
-      }
+  .eyebrow{
+    font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--amber-deep);margin-bottom:18px;
+  }
+  .dark .eyebrow{color:var(--amber)}
+  h1{font-family:var(--serif);font-size:44px;font-weight:600;letter-spacing:-.015em;line-height:1.1}
+  h2{font-family:var(--serif);font-size:21px;font-weight:600}
+  .lede{font-size:16px;line-height:1.55;color:var(--ink-68);max-width:900px;margin-top:14px}
+  .dark .lede{color:#C9CDD6}
+  .body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:26px 0}
+  .foot{font-size:11px;color:var(--ink-45);border-top:1px solid var(--ink-08);padding-top:12px}
+  .dark .foot{color:#6E7686;border-top-color:rgba(255,255,255,.09)}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-      /* Screen: each slide is a fixed 1280x720 canvas scaled to fit the
-         viewport. The frame is the scaled box so vertical scroll works. */
-      .frame {
-        width: calc(1280px * var(--s));
-        height: calc(720px * var(--s));
-        margin: 0 auto 18px;
-        overflow: hidden;
-        border-radius: 10px;
-        box-shadow: var(--shadow-card);
-      }
-      .slide {
-        width: 1280px;
-        height: 720px;
-        transform: scale(var(--s));
-        transform-origin: top left;
-        position: relative;
-        overflow: hidden;
-        background: var(--paper);
-        color: var(--ink);
-        padding: 84px 96px;
-        display: flex;
-        flex-direction: column;
-      }
+  .card{background:var(--paper-sunk);border-radius:12px;padding:24px 26px}
+  .dark .card{background:var(--ink-soft)}
+  .card.amber{background:var(--paper-amber)}
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g5{grid-template-columns:repeat(5,1fr);gap:12px}
 
-      .eyebrow {
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--ink-45);
-      }
-      .num {
-        font-family: var(--mono);
-        font-variant-numeric: tabular-nums;
-      }
-      h1 {
-        font-family: var(--serif);
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        line-height: 1.02;
-      }
-      h2 {
-        font-family: var(--serif);
-        font-weight: 600;
-        font-size: 52px;
-        letter-spacing: -0.02em;
-        line-height: 1.05;
-      }
-      p {
-        line-height: 1.6;
-      }
-      .lead {
-        font-size: 26px;
-        color: var(--ink-72);
-        line-height: 1.5;
-      }
-      .foot {
-        position: absolute;
-        bottom: 40px;
-        left: 96px;
-        right: 96px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        color: var(--ink-45);
-      }
-      .amber {
-        color: var(--amber-ink);
-      }
-      .pill {
-        display: inline-block;
-        padding: 5px 14px;
-        border-radius: 999px;
-        background: var(--paper-amber);
-        border: 1px solid rgba(233, 161, 59, 0.35);
-        color: var(--amber-ink);
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .card {
-        background: var(--white);
-        border-radius: 18px;
-        box-shadow: var(--shadow-card);
-        padding: 26px 28px;
-      }
-      .grid2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-      }
-      .grid3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-      }
-      .kv {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 11px 0;
-        border-top: 1px solid var(--ink-08);
-        font-size: 18px;
-      }
-      .kv:first-child {
-        border-top: none;
-      }
-      .kv .k {
-        color: var(--ink-62);
-      }
-      .addr {
-        font-family: var(--mono);
-        font-size: 15px;
-      }
-      /* Deployed-addresses card: label above the full 42-char address, so a
-         judge can paste straight into Basescan rather than trust a truncation. */
-      .row .k {
-        display: block;
-        font-size: 12px;
-        color: var(--ink-45);
-        letter-spacing: 0.02em;
-      }
-      .fulladdr {
-        font-family: var(--mono);
-        font-size: 15px;
-        letter-spacing: -0.01em;
-        color: var(--ink);
-      }
+  .num{
+    width:30px;height:30px;border-radius:50%;background:var(--amber);color:var(--ink);
+    font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;
+    margin-bottom:14px;flex:none;
+  }
+  .stat{font-family:var(--serif);font-size:40px;font-weight:600;line-height:1}
+  .stat.amber{color:var(--amber)}
+  .label{font-size:12px;color:var(--ink-68);line-height:1.45;margin-top:8px}
+  .dark .label{color:#9BA3B2}
+  .small{font-size:13px;line-height:1.5;color:var(--ink-68)}
+  .dark .small{color:#AEB5C2}
 
-      /* Cover and the dark slides */
-      .slide.dark {
-        background: var(--ink);
-        color: var(--white);
-      }
-      .slide.dark .eyebrow {
-        color: var(--white-45);
-      }
-      .slide.dark .lead {
-        color: var(--white-72);
-      }
-      .slide.dark .foot {
-        color: var(--white-45);
-      }
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{
+    text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-45);font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--ink-08);
+  }
+  td{padding:7px 0;border-bottom:1px solid var(--ink-08);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .ok{color:#2E7D5B;font-weight:500}
+  .fail{color:#B0402B;font-weight:500}
 
-      /* Print: one slide per 16:9 page, no scaling. */
-      @page {
-        size: 1280px 720px;
-        margin: 0;
-      }
-      @media print {
-        body {
-          background: #fff;
-          padding: 0;
-        }
-        .frame {
-          width: 1280px;
-          height: 720px;
-          margin: 0;
-          border-radius: 0;
-          box-shadow: none;
-          overflow: hidden;
-        }
-        .slide {
-          transform: none !important;
-          page-break-after: always;
-          break-after: page;
-        }
-        .frame:last-child .slide {
-          page-break-after: avoid;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- 1. COVER -->
-    <div class="frame">
-      <section class="slide dark" style="justify-content: center">
-        <div class="eyebrow">Cleanverse Build · Trusted Assets · DeFi</div>
-        <h1 style="font-size: 118px; margin-top: 26px">Kudira</h1>
-        <p class="lead" style="margin-top: 26px; max-width: 900px">
-          Buy now, pay later underwritten by verified identity instead of collateral. The merchant is
-          paid in full at checkout while Kudira carries the credit risk.
-        </p>
-        <div style="margin-top: 34px; display: flex; gap: 12px">
-          <span class="pill" style="background: rgba(233, 161, 59, 0.14); border-color: rgba(233, 161, 59, 0.4)"
-            >Live on Base Sepolia</span
-          >
-          <span
-            class="pill"
-            style="background: var(--white-12); border-color: var(--white-12); color: var(--white-72)"
-            >116 tests green</span
-          >
-        </div>
-      </section>
+  .pill{
+    display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.06em;
+    padding:4px 10px;border-radius:999px;background:var(--amber);color:var(--ink);
+  }
+  .rule{width:56px;height:3px;background:var(--amber);border-radius:2px}
+
+  .blob{position:absolute;border-radius:50%;background:var(--amber);opacity:.12;pointer-events:none}
+
+  @page{size:1280px 720px;margin:0}
+  @media print{
+    body{background:none}
+    .slide{margin:0;page-break-after:always;box-shadow:none}
+    .slide:last-child{page-break-after:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section class="slide dark">
+  <div class="blob" style="width:520px;height:520px;right:-150px;top:-190px"></div>
+  <div class="blob" style="width:300px;height:300px;right:-40px;top:60px;opacity:.2"></div>
+  <div class="body" style="justify-content:center">
+    <div style="font-family:var(--serif);font-size:82px;font-weight:600;letter-spacing:.02em">KUDIRA</div>
+    <div class="rule" style="margin:22px 0 26px"></div>
+    <div style="font-size:21px;color:#C9CDD6;line-height:1.45;max-width:740px">
+      Buy now, pay later, underwritten by verified identity instead of collateral.
     </div>
-
-    <!-- 2. PROBLEM -->
-    <div class="frame">
-      <section class="slide">
-        <div class="eyebrow">The problem</div>
-        <h2 style="margin-top: 22px; max-width: 980px">
-          Uncollateralised credit against an anonymous wallet cannot work.
-        </h2>
-        <div class="grid2" style="margin-top: 40px; gap: 22px">
-          <div class="card">
-            <div class="num amber" style="font-size: 30px">01</div>
-            <p style="font-size: 20px; margin-top: 10px; color: var(--ink-72)">
-              A limit inferred from wallet history is a limit anyone can manufacture.
-            </p>
-          </div>
-          <div class="card">
-            <div class="num amber" style="font-size: 30px">02</div>
-            <p style="font-size: 20px; margin-top: 10px; color: var(--ink-72)">
-              One person opens unlimited wallets and draws unlimited credit from each.
-            </p>
-          </div>
-          <div class="card">
-            <div class="num amber" style="font-size: 30px">03</div>
-            <p style="font-size: 20px; margin-top: 10px; color: var(--ink-72)">
-              Default costs the borrower nothing but a discarded keypair.
-            </p>
-          </div>
-          <div class="card">
-            <div class="num amber" style="font-size: 30px">04</div>
-            <p style="font-size: 20px; margin-top: 10px; color: var(--ink-72)">
-              The only safe design left is collateral. A loan secured by collateral is a pawnshop, not
-              BNPL.
-            </p>
-          </div>
-        </div>
-      </section>
+    <div style="display:flex;gap:64px;margin-top:52px">
+      <div>
+        <div class="eyebrow" style="margin-bottom:6px">Track</div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:600">DeFi</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:6px">Chain</div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:600">Base Sepolia</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:6px">Status</div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:600">Live on-chain</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:6px">Team</div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:600">breeklayer</div>
+      </div>
     </div>
+  </div>
+  <div class="foot">Cleanverse Build: Trusted Assets Hackathon &nbsp;·&nbsp; Supported by Monad Foundation</div>
+</section>
 
-    <!-- 3. WHY CLEANVERSE IS LOAD-BEARING -->
-    <div class="frame">
-      <section class="slide dark">
-        <div class="eyebrow">Why Cleanverse is load-bearing</div>
-        <h2 style="margin-top: 22px; color: var(--white); max-width: 1000px">
-          The honest test of an integration is what happens when you remove it.
-        </h2>
-        <p class="lead" style="margin-top: 34px; max-width: 940px">
-          A-Pass is bank-verified, wallet-bound, non-transferable and revocable. That is what lets a
-          credential carry the risk collateral otherwise has to.
-        </p>
-        <div
-          style="
-            margin-top: 40px;
-            padding: 26px 30px;
-            border-radius: 18px;
-            background: rgba(233, 161, 59, 0.12);
-            border: 1px solid rgba(233, 161, 59, 0.4);
-            max-width: 940px;
-          "
-        >
-          <p style="font-size: 24px; color: var(--white)">
-            Remove Cleanverse from Kudira and you do not get a degraded product.
-            <span class="amber" style="color: var(--amber-light)">You get nothing.</span>
-          </p>
-        </div>
-      </section>
+<!-- 2 PROBLEM -->
+<section class="slide">
+  <div class="eyebrow">The problem</div>
+  <h1>Every on-chain lender is a pawnshop.</h1>
+  <div class="lede">Anonymous wallets have nothing to lose, so DeFi lending converged on the only model that works without identity: make the borrower post more than they take.</div>
+  <div class="body">
+    <div class="grid g2">
+      <div class="card">
+        <h2>Traditional DeFi lending</h2>
+        <div style="font-size:12px;font-weight:600;letter-spacing:.05em;color:#2E7D5B;margin:8px 0 16px">OVERCOLLATERALIZED</div>
+        <div class="small">Deposit $150 of collateral. Borrow $100. If you disappear, the protocol liquidates and is made whole.</div>
+        <div style="margin-top:22px"><span class="pill" style="background:#2E7D5B;color:#fff">Works without identity</span></div>
+      </div>
+      <div class="card amber">
+        <h2>Buy now, pay later</h2>
+        <div style="font-size:12px;font-weight:600;letter-spacing:.05em;color:#B0402B;margin:8px 0 16px">UNCOLLATERALIZED BY DEFINITION</div>
+        <div class="small">Receive $100 of goods today. Promise to pay in four installments. If you disappear, the lender eats the loss.</div>
+        <div style="margin-top:22px"><span class="pill" style="background:#B0402B;color:#fff">Impossible without identity</span></div>
+      </div>
     </div>
+  </div>
+  <div class="foot">Overcollateralization is not a design choice. It is what is left when you cannot identify your borrower.</div>
+</section>
 
-    <!-- 4. HOW IT WORKS -->
-    <div class="frame">
-      <section class="slide">
-        <div class="eyebrow">How it works</div>
-        <h2 style="margin-top: 22px">Five stages, one purchase.</h2>
-        <div style="margin-top: 46px; display: flex; gap: 14px; align-items: stretch">
-          <div class="card" style="flex: 1; text-align: left">
-            <div class="eyebrow amber">Verify</div>
-            <p style="font-size: 17px; margin-top: 12px; color: var(--ink-72)">
-              Read the buyer's A-Pass. Standing only, never documents.
-            </p>
-          </div>
-          <div class="card" style="flex: 1">
-            <div class="eyebrow amber">Underwrite</div>
-            <p style="font-size: 17px; margin-top: 12px; color: var(--ink-72)">
-              subTier sets the credit grade and limit, on-chain.
-            </p>
-          </div>
-          <div class="card" style="flex: 1">
-            <div class="eyebrow amber">Settle</div>
-            <p style="font-size: 17px; margin-top: 12px; color: var(--ink-72)">
-              Merchant paid in full, in the same transaction.
-            </p>
-          </div>
-          <div class="card" style="flex: 1">
-            <div class="eyebrow amber">Repay</div>
-            <p style="font-size: 17px; margin-top: 12px; color: var(--ink-72)">
-              Auto-debit pulls each installment as it falls due.
-            </p>
-          </div>
-          <div class="card" style="flex: 1">
-            <div class="eyebrow amber">Enforce</div>
-            <p style="font-size: 17px; margin-top: 12px; color: var(--ink-72)">
-              On-time raises the grade, default lowers it.
-            </p>
-          </div>
+<!-- 3 WHY CLEANVERSE -->
+<section class="slide dark">
+  <div class="blob" style="width:560px;height:560px;left:-230px;bottom:-260px"></div>
+  <div class="eyebrow">Why Cleanverse is load-bearing</div>
+  <h1>Take Cleanverse out and<br>there is no product.</h1>
+  <div class="body">
+    <div class="grid g2">
+      <div class="card">
+        <h2 style="margin-bottom:16px">Without verified identity</h2>
+        <div class="small" style="line-height:1.75">
+          Credit limit has to be inferred from wallet history, which any borrower can manufacture.<br>
+          One person opens unlimited wallets and draws unlimited credit.<br>
+          Default costs the borrower nothing but a discarded keypair.<br>
+          The only safe design left is collateral, and a loan secured by collateral is a pawnshop, not BNPL.
         </div>
-        <p style="margin-top: 40px; font-size: 22px; color: var(--ink-68); max-width: 1000px">
-          The merchant carries no credit risk and waits for nothing. Kudira holds the risk, priced
-          against a credential a borrower cannot fake or discard.
-        </p>
-      </section>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:16px">With CVI</h2>
+        <div class="small" style="line-height:1.75">
+          The credential is bank-verified, wallet-bound, non-transferable and revocable.<br>
+          One person, one credential, one credit line across every merchant.<br>
+          Default is recorded against an identity the borrower cannot discard.<br>
+          Identity carries the risk that collateral otherwise has to.
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="foot">Removing CVI does not degrade Kudira. It deletes it.</div>
+</section>
 
-    <!-- 5. PROOF, NOT PROJECTION -->
-    <div class="frame">
-      <section class="slide">
-        <div class="eyebrow">Proof, not projection</div>
-        <h2 style="margin-top: 18px">Every claim here is on-chain.</h2>
-        <div class="grid2" style="margin-top: 30px; align-items: start">
-          <div class="card">
-            <div class="eyebrow">Deployed, Base Sepolia 84532</div>
-            <div style="margin-top: 14px; display: grid; gap: 11px">
-              <div class="row">
-                <span class="k">KudiraPool</span>
-                <span class="fulladdr">0x4a898781AFAd85BE7103126952BcBbFCCC24199e</span>
-              </div>
-              <div class="row">
-                <span class="k">CreditLine</span>
-                <span class="fulladdr">0x49cD6c00EC00116Eed598b8e07f1B0D7A4805cBE</span>
-              </div>
-              <div class="row">
-                <span class="k">InstallmentPlan</span>
-                <span class="fulladdr">0xb4c055e7e880A684F9276435BDc12d25577d39D8</span>
-              </div>
-              <div class="row">
-                <span class="k">MerchantRegistry</span>
-                <span class="fulladdr">0x05e2A2473e710435484f6B3b288677618E95bB15</span>
-              </div>
-              <div class="row">
-                <span class="k">KUSDC settlement</span>
-                <span class="fulladdr">0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E</span>
-              </div>
-            </div>
-            <p style="font-size: 13px; color: var(--ink-45); margin-top: 14px">
-              Registered as a Cleanverse compliance pool. Paste any address into Basescan.
-            </p>
-          </div>
-          <div style="display: grid; gap: 18px">
-            <div class="grid3" style="gap: 14px">
-              <div class="card" style="padding: 20px">
-                <div class="num" style="font-size: 44px; letter-spacing: -0.03em">116</div>
-                <div style="font-size: 14px; color: var(--ink-62); margin-top: 4px">tests, all green</div>
-              </div>
-              <div class="card" style="padding: 20px">
-                <div class="num" style="font-size: 44px; letter-spacing: -0.03em">7</div>
-                <div style="font-size: 14px; color: var(--ink-62); margin-top: 4px">tx verified run</div>
-              </div>
-              <div class="card" style="padding: 20px">
-                <div class="num amber" style="font-size: 44px; letter-spacing: -0.03em">50→70</div>
-                <div style="font-size: 14px; color: var(--ink-62); margin-top: 4px">grade, on-chain</div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="eyebrow">The verified run</div>
-              <div style="margin-top: 10px; font-size: 16px; line-height: 1.7; color: var(--ink-72)">
-                <div>
-                  <span class="num amber">revert</span> originate at subTier 5 fails
-                  <span class="num">BorrowerDelinquent</span>
-                </div>
-                <div>
-                  <span class="num">130.00</span> merchant paid in full, same tx as origination
-                </div>
-                <div>
-                  <span class="num">4×</span> collect, grade
-                  <span class="num">50 → 55 → 60 → 65 → 70</span>
-                </div>
-                <div><span class="num">700.00</span> limit, <span class="num">wasEverLate=false</span></div>
-              </div>
-              <div class="addr" style="margin-top: 12px; font-size: 13px; color: var(--ink-45)">
-                originate 0x1aeb97fe…0504e3f6
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="foot"><span>Kudira</span><span class="num">05 / 09</span></div>
-      </section>
+<!-- 4 HOW IT WORKS -->
+<section class="slide paper">
+  <div class="eyebrow">How it works</div>
+  <h1>One checkout. Five moving parts.</h1>
+  <div class="body">
+    <div class="grid g5">
+      <div class="card" style="background:var(--white)"><div class="num">1</div><h2>Verify</h2><div class="label">Buyer connects a wallet holding a CVI credential. No credential, no credit line.</div></div>
+      <div class="card" style="background:var(--white)"><div class="num">2</div><h2>Underwrite</h2><div class="label">Credential standing sets the limit and the installment schedule.</div></div>
+      <div class="card" style="background:var(--white)"><div class="num">3</div><h2>Settle</h2><div class="label">Merchant is paid in full in the same transaction as origination.</div></div>
+      <div class="card" style="background:var(--white)"><div class="num">4</div><h2>Repay</h2><div class="label">Installments auto-debit on their due date. On-time payment raises the grade.</div></div>
+      <div class="card amber"><div class="num">5</div><h2>Enforce</h2><div class="label">Default lowers the grade. The credential stays active so repayment is always possible.</div></div>
     </div>
+  </div>
+  <div class="foot">The merchant takes no credit risk and waits for nothing. The buyer's credential carries the risk instead of a deposit they do not have.</div>
+</section>
 
-    <!-- 6. INTEGRATION SURFACE -->
-    <div class="frame">
-      <section class="slide">
-        <div class="eyebrow">Integration surface</div>
-        <h2 style="margin-top: 18px">Four Cleanverse modules, each load-bearing.</h2>
-        <div class="grid2" style="margin-top: 28px; gap: 16px">
-          <div class="card">
-            <div class="eyebrow amber">A-Pass read · underwrite</div>
-            <p style="font-size: 17px; margin-top: 10px; color: var(--ink-72)">
-              <span class="num">query_apass</span> gives tier, subTier, status and expiry. No plan may
-              outlive the credential, enforced in the contract.
-            </p>
-          </div>
-          <div class="card">
-            <div class="eyebrow amber">A-Pass write · grade</div>
-            <p style="font-size: 17px; margin-top: 10px; color: var(--ink-72)">
-              Repayment writes back through <span class="num">generate_apass</span>. On-time
-              <span class="num">+5</span>, default <span class="num">−20</span>, both saturating.
-            </p>
-          </div>
-          <div class="card" style="border: 1px solid rgba(233, 161, 59, 0.4)">
-            <div class="eyebrow amber">CCP compliance pool</div>
-            <p style="font-size: 17px; margin-top: 10px; color: var(--ink-72)">
-              KudiraPool integrates the Cleanverse Compliance Protocol as a lending pool. Live and
-              discriminating: <span class="num">validator/verify</span>, and its on-chain twin
-              <span class="num">complianceVerify</span> on the CCP validator, both return
-              <span class="amber num">true</span> for a credentialed wallet,
-              <span class="num">false</span> for one generated a second ago.
-            </p>
-          </div>
-          <div class="card">
-            <div class="eyebrow amber">CVA settlement</div>
-            <p style="font-size: 17px; margin-top: 10px; color: var(--ink-72)">
-              Both parties must hold a credential, enforced on-chain. We settle in KUSDC, a CVA
-              (Cleanverse Verified Asset) we issued through Cleanverse's documented
-              <span class="num">/atoken/launch</span> path after the Base faucet stopped dispensing
-              aUSDC on 24 July. Same <span class="num">min_tier 5</span> rule, gated identically.
-              <span style="color: var(--ink)">We can mint KUSDC but cannot mint past a credential check.</span>
-            </p>
-          </div>
+<!-- 5 PROOF -->
+<section class="slide">
+  <div class="eyebrow">Proof, not projection</div>
+  <h1>Deployed, verified, on-chain.</h1>
+  <div class="body" style="padding-top:18px">
+    <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:26px">
+      <div>
+        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-45);font-weight:600;margin-bottom:10px">Base Sepolia · chainId 84532</div>
+        <table>
+          <tr><td style="width:132px;color:var(--ink-68)">KudiraPool</td><td class="mono">0x4a898781AFAd85BE7103126952BcBbFCCC24199e</td></tr>
+          <tr><td style="color:var(--ink-68)">CreditLine</td><td class="mono">0x49cD6c00EC00116Eed598b8e07f1B0D7A4805cBE</td></tr>
+          <tr><td style="color:var(--ink-68)">InstallmentPlan</td><td class="mono">0xb4c055e7e880A684F9276435BDc12d25577d39D8</td></tr>
+          <tr><td style="color:var(--ink-68)">MerchantRegistry</td><td class="mono">0x05e2A2473e710435484f6B3b288677618E95bB15</td></tr>
+          <tr><td style="color:var(--ink-68)">KUSDC (CVA)</td><td class="mono">0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E</td></tr>
+          <tr><td style="color:var(--ink-68)">CCP validator</td><td class="mono">0xaC7e5179C2C7f03f209136886c172eb34F161792</td></tr>
+        </table>
+        <div class="small" style="margin-top:14px">Paste any address into Basescan. <span class="mono">getRulesV2(pool)</span> returns <span class="mono">(0x0000, 0x0000, 5, 0, 0)</span> and <span class="mono">isRegistered(pool)</span> returns true, read from Cleanverse's own validator.</div>
+      </div>
+      <div>
+        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-45);font-weight:600;margin-bottom:10px">The verified run</div>
+        <table>
+          <tr><td>Origination blocked below the delinquency floor</td><td class="fail" style="text-align:right;white-space:nowrap">reverted, expected</td></tr>
+          <tr><td>Origination, merchant paid in the same tx</td><td class="ok" style="text-align:right">success</td></tr>
+          <tr><td>Buyer signs their own approve</td><td class="ok" style="text-align:right">success</td></tr>
+          <tr><td>Four installments auto-collected</td><td class="ok" style="text-align:right">success</td></tr>
+        </table>
+        <div class="grid g3" style="margin-top:20px">
+          <div><div class="stat">116</div><div class="label">Foundry tests</div></div>
+          <div><div class="stat">50&#8594;70</div><div class="label">grade moved on-chain</div></div>
+          <div><div class="stat">0</div><div class="label">mocked calls in the demo</div></div>
         </div>
-        <div class="foot"><span>Kudira</span><span class="num">06 / 09</span></div>
-      </section>
+      </div>
     </div>
+  </div>
+  <div class="foot">Seven transactions, one deliberately failed. Every hash is in the README.</div>
+</section>
 
-    <!-- 7. WHAT WE FOUND -->
-    <div class="frame">
-      <section class="slide dark">
-        <div class="eyebrow">What we found</div>
-        <h2 style="margin-top: 16px; color: var(--white)">
-          Four things a live sandbox taught us that no local test could.
-        </h2>
-        <div class="grid2" style="margin-top: 30px; gap: 16px">
-          <div
-            style="
-              padding: 22px 24px;
-              border-radius: 16px;
-              background: rgba(255, 255, 255, 0.05);
-              border: 1px solid var(--white-12);
-            "
-          >
-            <div class="eyebrow" style="color: var(--amber-light)">The one-second window</div>
-            <p style="font-size: 16px; margin-top: 10px; color: var(--white-72); line-height: 1.55">
-              Auto-debit could never earn its reward. A payment was on time only at the exact due second,
-              which a chain cannot hit. The tests were green against a moment that cannot happen. Fixed
-              with a grace period, stored per plan.
-            </p>
-          </div>
-          <div
-            style="
-              padding: 22px 24px;
-              border-radius: 16px;
-              background: rgba(255, 255, 255, 0.05);
-              border: 1px solid var(--white-12);
-            "
-          >
-            <div class="eyebrow" style="color: var(--amber-light)">The invisible aUSDC gate</div>
-            <p style="font-size: 16px; margin-top: 10px; color: var(--white-72); line-height: 1.55">
-              Nothing in the token's ABI shows it gates transfers. The check lives in
-              <span class="num">_update</span> behind namespaced storage, reverting
-              <span class="num">NoAPass</span> before the balance check. Reading the interface gives a
-              confident, wrong answer.
-            </p>
-          </div>
-          <div
-            style="
-              padding: 22px 24px;
-              border-radius: 16px;
-              background: rgba(255, 255, 255, 0.05);
-              border: 1px solid var(--white-12);
-            "
-          >
-            <div class="eyebrow" style="color: var(--amber-light)">The TLS handshake</div>
-            <p style="font-size: 16px; margin-top: 10px; color: var(--white-72); line-height: 1.55">
-              Node 24's default post-quantum key share is silently dropped by the Cleanverse edge. Every
-              request from Node timed out while curl succeeded. Restricting to classical curves fixes it
-              and still negotiates TLS 1.3.
-            </p>
-          </div>
-          <div
-            style="
-              padding: 22px 24px;
-              border-radius: 16px;
-              background: rgba(255, 255, 255, 0.05);
-              border: 1px solid var(--white-12);
-            "
-          >
-            <div class="eyebrow" style="color: var(--amber-light)">The Travel Rule boundary</div>
-            <p style="font-size: 16px; margin-top: 10px; color: var(--white-72); line-height: 1.55">
-              <span class="num">TR_001</span> for our tx,
-              <span class="num">CV_100</span> for another institution's wallet. That contrast isolates
-              the cause to indexing: our CVA sits outside the settlement flow Travel Rule reports
-              from.
-            </p>
-          </div>
-        </div>
-        <div class="foot" style="color: var(--white-45)">
-          <span>Found by running live, not in tests.</span><span class="num">07 / 09</span>
-        </div>
-      </section>
+<!-- 6 INTEGRATION -->
+<section class="slide paper">
+  <div class="eyebrow">Integration surface</div>
+  <h1>Where the stack does the work.</h1>
+  <div class="body" style="padding-top:16px">
+    <div class="grid g2">
+      <div class="card" style="background:var(--white)">
+        <span class="pill">CVI</span>
+        <h2 style="margin:14px 0 8px">The underwriting input</h2>
+        <div class="small">Credential standing sets the credit limit. Repayment behaviour writes back to subTier through <span class="mono">generate_apass</span>, so the grade is published to the network, not held privately.</div>
+      </div>
+      <div class="card" style="background:var(--white)">
+        <span class="pill">CVA</span>
+        <h2 style="margin:14px 0 8px">The settlement asset</h2>
+        <div class="small">We settle in KUSDC, a CVA issued under our Issue Member scope via Launch CVA, after Cleanverse's Base faucet stopped dispensing on 24 July. Same <span class="mono">min_tier 5</span> rule, gated identically on both sides of every transfer.</div>
+      </div>
+      <div class="card amber">
+        <span class="pill" style="background:var(--ink);color:var(--amber)">CCP</span>
+        <h2 style="margin:14px 0 8px">The compliance gate</h2>
+        <div class="small">KudiraPool is a Pattern 2 single-contract lending pool registered with the CVI Compliance Validator. <span class="mono">complianceVerify(pool, wallet)</span> is read on-chain alongside the REST check, and the merchant dashboard shows both, live.</div>
+      </div>
+      <div class="card" style="background:var(--white)">
+        <span class="pill" style="background:var(--ink);color:var(--white)">Rules</span>
+        <h2 style="margin:14px 0 8px">Policy, not decoration</h2>
+        <div class="small">Our RuleV2 lives in Cleanverse's validator and in the contract's own mirror. Origination checks both. If they ever disagree, the UI says so rather than picking one.</div>
+      </div>
     </div>
+  </div>
+  <div class="foot">We can mint KUSDC. We cannot mint past a credential check. The gate is Cleanverse's, not ours.</div>
+</section>
 
-    <!-- 8. PILOT PATH -->
-    <div class="frame">
-      <section class="slide">
-        <div class="eyebrow">Pilot path</div>
-        <h2 style="margin-top: 18px; max-width: 1000px">
-          Southeast Asia and Latin America, where the ramp already reaches.
-        </h2>
-        <div style="margin-top: 34px; display: flex; gap: 12px; flex-wrap: wrap">
-          <span class="pill" style="font-size: 20px; padding: 10px 22px">Philippines</span>
-          <span class="pill" style="font-size: 20px; padding: 10px 22px">Brazil</span>
-          <span class="pill" style="font-size: 20px; padding: 10px 22px">Mexico</span>
-          <span class="pill" style="font-size: 20px; padding: 10px 22px">Peru</span>
-          <span class="pill" style="font-size: 20px; padding: 10px 22px">Malaysia</span>
-        </div>
-        <div class="grid2" style="margin-top: 40px; gap: 22px">
-          <div class="card">
-            <div class="eyebrow">Why these markets</div>
-            <p style="font-size: 19px; margin-top: 12px; color: var(--ink-72)">
-              All five are in Cleanverse's supported ramp country list. We frame demand where the
-              on/off-ramp actually functions, not where a slide says it might.
-            </p>
-          </div>
-          <div class="card">
-            <div class="eyebrow">Why it fits the demo</div>
-            <p style="font-size: 19px; margin-top: 12px; color: var(--ink-72)">
-              The storefront is Manila Coffee Roasters, a Philippine merchant paid in KUSDC. The pitch
-              and the product are set in the same place.
-            </p>
-          </div>
-        </div>
-        <div class="foot"><span>Kudira</span><span class="num">08 / 09</span></div>
-      </section>
+<!-- 7 WHAT WE FOUND -->
+<section class="slide dark">
+  <div class="eyebrow">What we found</div>
+  <h1>Four things that only surface<br>on a live chain.</h1>
+  <div class="body" style="padding-top:16px">
+    <div class="grid g2">
+      <div class="card">
+        <h2 style="margin-bottom:8px">The interval with no width</h2>
+        <div class="small">Auto-debit fires when an installment falls due, but "on time" meant paid before the due date. The intersection was a single instant, so the reward could never fire. Our tests were green because <span class="mono">vm.warp</span> landed exactly on it.</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:8px">The gate the ABI hides</h2>
+        <div class="small">CVA transfers check both parties inside <span class="mono">_update</span>, behind ERC-7201 storage, before the balance check. Nothing in the interface says so. Reading the ABI gives a confident wrong answer.</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:8px">A handshake that never completes</h2>
+        <div class="small">Node 24's default TLS group list leads with a post-quantum key share. The sandbox edge drops those hellos silently: TCP connects, then nothing. Any classical group works.</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:8px">Where Travel Rule ends</h2>
+        <div class="small">Reporting is bound to the indexed settlement flow. <span class="mono">TR_001</span> for our transfer, <span class="mono">CV_100</span> for another institution's wallet, which isolates the cause to indexing rather than permissions. The merchant panel shows the real failure and explains it.</div>
+      </div>
     </div>
+  </div>
+  <div class="foot">Each of these was found by running the thing, not by reading about it.</div>
+</section>
 
-    <!-- 9. CLOSE -->
-    <div class="frame">
-      <section class="slide dark" style="justify-content: center">
-        <h1 style="font-size: 68px; max-width: 1000px">
-          Compliance-native BNPL,<br />live and on-chain today.
-        </h1>
-        <div class="grid3" style="margin-top: 42px; max-width: 1040px">
-          <div>
-            <div class="eyebrow">Repository</div>
-            <p style="font-size: 18px; margin-top: 8px; color: var(--white-72)">
-              Contracts, frontend, and every sandbox probe.
-            </p>
-          </div>
-          <div>
-            <div class="eyebrow">Live deployment</div>
-            <p style="font-size: 18px; margin-top: 8px; color: var(--white-72)">
-              Base Sepolia. Pool registered, run verified.
-            </p>
-          </div>
-          <div>
-            <div class="eyebrow">The ask</div>
-            <p style="font-size: 18px; margin-top: 8px; color: var(--white-72)">
-              Judge the depth of integration. Remove A-Pass and there is no product.
-            </p>
-          </div>
-        </div>
-        <div class="foot" style="color: var(--white-45)">
-          <span>Kudira · Cleanverse Build: Trusted Assets</span><span class="num">09 / 09</span>
-        </div>
-      </section>
+<!-- 8 PILOT -->
+<section class="slide">
+  <div class="eyebrow">Pilot path</div>
+  <h1>Who signs the first contract.</h1>
+  <div class="lede">Cleanverse asks whether a project can be piloted with institutions or merchants. Three routes, ordered by how quickly they close.</div>
+  <div class="body">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card" style="display:flex;gap:22px;align-items:flex-start;padding:20px 26px">
+        <div class="num" style="margin:0">1</div>
+        <div style="width:250px"><h2>Merchant acquirers</h2><div style="font-size:11px;font-weight:600;color:var(--amber-deep);letter-spacing:.06em;margin-top:4px">FASTEST</div></div>
+        <div class="small" style="flex:1">Processors already integrated with Cleanverse can offer Kudira at checkout to their existing merchant base. Distribution without a new sales motion.</div>
+      </div>
+      <div class="card" style="display:flex;gap:22px;align-items:flex-start;padding:20px 26px">
+        <div class="num" style="margin:0">2</div>
+        <div style="width:250px"><h2>Licensed lenders</h2><div style="font-size:11px;font-weight:600;color:var(--amber-deep);letter-spacing:.06em;margin-top:4px">HIGHEST VOLUME</div></div>
+        <div class="small" style="flex:1">Consumer credit firms supply the liquidity and use CVI for the affordability checks they are already legally required to perform.</div>
+      </div>
+      <div class="card amber" style="display:flex;gap:22px;align-items:flex-start;padding:20px 26px">
+        <div class="num" style="margin:0">3</div>
+        <div style="width:250px"><h2>Emerging market fintechs</h2><div style="font-size:11px;font-weight:600;color:var(--amber-deep);letter-spacing:.06em;margin-top:4px">LARGEST UPSIDE</div></div>
+        <div class="small" style="flex:1">Philippines, Brazil, Mexico, Peru and Malaysia are Cleanverse ramp countries where thin credit files block BNPL entirely and a portable bank-verified credential is the only viable signal. The demo is set in Manila.</div>
+      </div>
     </div>
+  </div>
+  <div class="foot">A credible route to a pilot, not a claimed one.</div>
+</section>
 
-    <script>
-      // Screen-only: scale each 1280x720 slide to fit the viewport width. Print
-      // ignores this and uses the @page size, so the PDF is exact 16:9.
-      function fit() {
-        const pad = 40;
-        const s = Math.min(1, (window.innerWidth - pad) / 1280);
-        document.documentElement.style.setProperty("--s", s.toFixed(4));
-      }
-      window.addEventListener("resize", fit);
-      fit();
-    </script>
-  </body>
+<!-- 9 CLOSE -->
+<section class="slide dark">
+  <div class="blob" style="width:500px;height:500px;right:-180px;bottom:-220px"></div>
+  <div class="eyebrow">Kudira</div>
+  <div class="body" style="justify-content:center">
+    <div class="rule" style="margin-bottom:26px"></div>
+    <div style="font-family:var(--serif);font-size:40px;font-weight:600;line-height:1.2;max-width:900px">
+      Buy now, pay later has been waiting<br>for verified identity.<br>Cleanverse shipped it.
+    </div>
+    <div class="grid g3" style="margin-top:52px;max-width:920px">
+      <div class="card"><div class="label" style="margin:0 0 6px">Live app</div><div class="mono" style="font-size:13px;color:var(--amber)">kudira-fi.vercel.app</div></div>
+      <div class="card"><div class="label" style="margin:0 0 6px">Repository</div><div class="mono" style="font-size:13px;color:var(--amber)">github.com/shrooms08/kudira</div></div>
+      <div class="card"><div class="label" style="margin:0 0 6px">Team</div><div class="mono" style="font-size:13px;color:var(--amber)">breeklayer</div></div>
+    </div>
+  </div>
+  <div class="foot">DeFi track &nbsp;·&nbsp; Base Sepolia &nbsp;·&nbsp; rukevwe.eminokanju08@gmail.com</div>
+</section>
+
+</body>
 </html>
