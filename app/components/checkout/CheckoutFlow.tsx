@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   useAccount,
-  useChainId,
   useConnect,
   useReadContract,
   useSwitchChain,
@@ -41,13 +40,22 @@ type ApassRead = {
 };
 
 export function CheckoutFlow() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   const { connect, connectors, isPending: connecting } = useConnect();
+  const { switchChain, isPending: switching, error: switchError } = useSwitchChain();
   // A wallet can be connected but on the wrong network. Catch that at connect,
   // not at the signing step: an approve on Ethereum mainnet fails with an opaque
   // "not enough gas" because there is no KUSDC or plan there at all.
-  const chainId = useChainId();
-  const { switchChain, isPending: switching, error: switchError } = useSwitchChain();
+  //
+  // chainId MUST come from useAccount() (the connector's actual chain), NOT
+  // useChainId(). useChainId() reads the wagmi *config* state, and the config in
+  // WalletProvider registers only baseSepolia. wagmi never adopts a chain that
+  // isn't in that list, so on Ethereum mainnet useChainId() would still report
+  // 84532 and this guard could never see a mismatch. Do not "simplify" this back
+  // to useChainId() — it silently disables the whole check.
+  //
+  // undefined means the connector cannot report a chain: treat that as wrong,
+  // never as valid. An unknown chain must block signing, not fall through.
   const wrongChain = isConnected && chainId !== CHAIN_ID;
 
   const [apass, setApass] = useState<ApassRead | null>(null);
@@ -180,9 +188,9 @@ export function CheckoutFlow() {
               Switch to Base Sepolia
             </div>
             <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
-              Your wallet is on chain <span className="num">{chainId}</span>. Kudira lives on Base
-              Sepolia (<span className="num">{CHAIN_ID}</span>). Nothing can be signed until you
-              switch, so we stop you here rather than at the payment step.
+              Your wallet is on chain <span className="num">{chainId ?? "unknown"}</span>. Kudira
+              lives on Base Sepolia (<span className="num">{CHAIN_ID}</span>). Nothing can be signed
+              until you switch, so we stop you here rather than at the payment step.
             </p>
             <button
               onClick={() => switchChain({ chainId: CHAIN_ID })}
