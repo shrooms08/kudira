@@ -458,19 +458,21 @@
             </p>
           </div>
           <div class="card" style="border: 1px solid rgba(233, 161, 59, 0.4)">
-            <div class="eyebrow amber">Validator compliance pool</div>
+            <div class="eyebrow amber">CCP compliance pool</div>
             <p style="font-size: 17px; margin-top: 10px; color: var(--ink-72)">
-              Registered via <span class="num">validator/register</span>. Live and discriminating:
-              <span class="num">validator/verify</span> returns
+              KudiraPool integrates the Cleanverse Compliance Protocol as a lending pool. Live and
+              discriminating: <span class="num">validator/verify</span>, and its on-chain twin
+              <span class="num">complianceVerify</span> on the CCP validator, both return
               <span class="amber num">true</span> for a credentialed wallet,
               <span class="num">false</span> for one generated a second ago.
             </p>
           </div>
           <div class="card">
-            <div class="eyebrow amber">A-Token settlement</div>
+            <div class="eyebrow amber">CVA settlement</div>
             <p style="font-size: 17px; margin-top: 10px; color: var(--ink-72)">
-              Both parties must hold a credential, enforced on-chain. We settle in KUSDC, an A-Token we
-              issued under our Issue Member scope after Cleanverse's Base faucet stopped dispensing
+              Both parties must hold a credential, enforced on-chain. We settle in KUSDC, a CVA
+              (Cleanverse Verified Asset) we issued through Cleanverse's documented
+              <span class="num">/atoken/launch</span> path after the Base faucet stopped dispensing
               aUSDC on 24 July. Same <span class="num">min_tier 5</span> rule, gated identically.
               <span style="color: var(--ink)">We can mint KUSDC but cannot mint past a credential check.</span>
             </p>
@@ -546,7 +548,7 @@
             <p style="font-size: 16px; margin-top: 10px; color: var(--white-72); line-height: 1.55">
               <span class="num">TR_001</span> for our tx,
               <span class="num">CV_100</span> for another institution's wallet. That contrast isolates
-              the cause to indexing: our A-Token sits outside the settlement flow Travel Rule reports
+              the cause to indexing: our CVA sits outside the settlement flow Travel Rule reports
               from.
             </p>
           </div>

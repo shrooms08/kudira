@@ -9,6 +9,7 @@ import {
   poolAbi,
   registryAbi,
   RPC_URL,
+  validatorAbi,
 } from "./contracts";
 
 /**
@@ -35,6 +36,46 @@ const creditContract = { address: ADDRESSES.creditLine, abi: creditLineAbi } as 
 const poolContract = { address: ADDRESSES.pool, abi: poolAbi } as const;
 const registryContract = { address: ADDRESSES.registry, abi: registryAbi } as const;
 const kusdcContract = { address: ADDRESSES.kusdc, abi: erc20Abi } as const;
+const validatorContract = { address: ADDRESSES.ccpValidator, abi: validatorAbi } as const;
+
+export type RuleV2 = {
+  allowedGroup: `0x${string}`;
+  allowedSubGroup: `0x${string}`;
+  minTier: number;
+  minSubTier: number;
+  poolCountryBitmap: bigint;
+};
+
+/**
+ * The on-chain twin of `validator/verify`, read straight from Cleanverse's own
+ * CCP validator (`ADDRESSES.ccpValidator`). For each wallet, `complianceVerify`
+ * answers exactly what the REST endpoint answers; the merchant panel puts the two
+ * side by side and shouts if they ever diverge.
+ *
+ * Also pulls `isRegistered(pool)` and the stored `getRulesV2(pool)` so the panel
+ * can show our rule living in the validator, not just assert it. One multicall.
+ */
+export async function getComplianceOnChain(addresses: `0x${string}`[]): Promise<{
+  registered: boolean;
+  rules: RuleV2[];
+  verify: Record<string, boolean>;
+}> {
+  // Issued concurrently; the publicClient's multicall batch transport coalesces
+  // them into a single Multicall3 aggregate3 request at the RPC layer.
+  const [registered, rules, ...verdicts] = await Promise.all([
+    publicClient.readContract({ ...validatorContract, functionName: "isRegistered", args: [ADDRESSES.pool] }),
+    publicClient.readContract({ ...validatorContract, functionName: "getRulesV2", args: [ADDRESSES.pool] }),
+    ...addresses.map((a) =>
+      publicClient.readContract({ ...validatorContract, functionName: "complianceVerify", args: [ADDRESSES.pool, a] }),
+    ),
+  ]);
+
+  const verify: Record<string, boolean> = {};
+  addresses.forEach((a, i) => {
+    verify[a.toLowerCase()] = verdicts[i] as boolean;
+  });
+  return { registered: registered as boolean, rules: (rules as RuleV2[]) ?? [], verify };
+}
 
 export type Plan = {
   id: number;

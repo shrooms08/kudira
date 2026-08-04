@@ -11,10 +11,15 @@ export const ADDRESSES = {
   registry: "0x05e2A2473e710435484f6B3b288677618E95bB15",
   creditLine: "0x49cD6c00EC00116Eed598b8e07f1B0D7A4805cBE",
   plans: "0xb4c055e7e880A684F9276435BDc12d25577d39D8",
-  /// Our own A-Token. See README "Settlement asset".
+  /// Our own CVA (Cleanverse Verified Asset), issued via /atoken/launch.
+  /// See README "Settlement asset".
   kusdc: "0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E",
   /// aUSDC — what Cleanverse's settlement flow indexes. We hold none.
   ausdc: "0xaC0893567D43C3E7e6e35a72803df05416C1f20D",
+  /// CCP validator (IAPassComplianceValidator). Cleanverse-operated; recovered
+  /// from our registration tx. complianceVerify(pool, wallet) is the on-chain
+  /// twin of the validator/verify API. Read-only, no permission required.
+  ccpValidator: "0xaC7e5179C2C7f03f209136886c172eb34F161792",
 } as const;
 
 export const ACTORS = {
@@ -96,6 +101,26 @@ export const registryAbi = [
   { type: "function", name: "isActive", stateMutability: "view", inputs: [{ name: "merchant", type: "address" }], outputs: [{ type: "bool" }] },
   { type: "function", name: "payoutOf", stateMutability: "view", inputs: [{ name: "merchant", type: "address" }], outputs: [{ type: "address" }] },
   { type: "function", name: "owner", stateMutability: "view", inputs: [], outputs: [{ type: "address" }] },
+] as const;
+
+/// CCP validator (IAPassComplianceValidator). Read-only surface we exercise:
+/// complianceVerify is the on-chain twin of validator/verify; getRulesV2 returns
+/// the RuleV2[] Cleanverse stored for our pool at registration.
+export const ruleV2Struct = {
+  type: "tuple",
+  components: [
+    { name: "allowedGroup", type: "bytes2" },
+    { name: "allowedSubGroup", type: "bytes2" },
+    { name: "minTier", type: "uint8" },
+    { name: "minSubTier", type: "uint8" },
+    { name: "poolCountryBitmap", type: "uint256" },
+  ],
+} as const;
+
+export const validatorAbi = [
+  { type: "function", name: "complianceVerify", stateMutability: "view", inputs: [{ name: "poolAddress", type: "address" }, { name: "userAddress", type: "address" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "isRegistered", stateMutability: "view", inputs: [{ name: "poolAddress", type: "address" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "getRulesV2", stateMutability: "view", inputs: [{ name: "poolAddress", type: "address" }], outputs: [{ type: "tuple[]", components: ruleV2Struct.components }] },
 ] as const;
 
 export const erc20Abi = [

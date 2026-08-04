@@ -146,26 +146,69 @@ export function TravelRulePanel({ txHash }: { txHash: string }) {
   );
 }
 
+type RuleV2Json = {
+  allowedGroup: string;
+  allowedSubGroup: string;
+  minTier: number;
+  minSubTier: number;
+  poolCountryBitmap: string;
+};
+
 type VerifyResult = {
   pool: string;
   atoken: string;
+  validator: string;
   checkedAt: string;
+  onChain: { registered: boolean; rules: RuleV2Json[] };
+  anyDisagreement: boolean;
   results: Array<{
     label: string;
     address: string;
     note: string;
-    valid: boolean | null;
+    restValid: boolean | null;
+    chainValid: boolean | null;
+    agree: boolean | null;
     validatorRaw: unknown;
     tokenCode: number | null;
     tokenMessage: string | null;
   }>;
 };
 
+function ruleTuple(r: RuleV2Json): string {
+  return `(${r.allowedGroup}, ${r.allowedSubGroup}, ${r.minTier}, ${r.minSubTier}, ${r.poolCountryBitmap})`;
+}
+
+/// One wallet's verdict, the REST answer and the on-chain answer side by side.
+function Verdict({ label, value }: { label: string; value: boolean | null }) {
+  const text = value === null ? "—" : String(value);
+  const on = value === true;
+  return (
+    <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="eyebrow" style={{ fontSize: 9.5, color: "var(--ink-45)" }}>
+        {label}
+      </div>
+      <div
+        className="num"
+        style={{
+          marginTop: 3,
+          fontSize: 14,
+          fontWeight: 600,
+          color: on ? "var(--amber-ink)" : "var(--ink-62)",
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
+
 /**
- * The compliance check that DOES work. Calls validator/verify live against our
- * registered pool rule, for a credentialed wallet and for one generated at
- * request time. The fresh wallet is what makes it unfakeable — it cannot have
- * been prepared in advance.
+ * Compliance, checked two independent ways for the same wallets: the live
+ * `validator/verify` REST endpoint, and `complianceVerify(pool, wallet)` read
+ * straight from Cleanverse's CCP validator contract. Each is labelled. If the two
+ * ever disagree the panel says so loudly instead of trusting either — that
+ * divergence is the whole point. The fresh wallet, generated at request time, is
+ * what makes the false case unfakeable.
  */
 export function ValidatorVerifyPanel() {
   const [result, setResult] = useState<VerifyResult | null>(null);
@@ -184,7 +227,7 @@ export function ValidatorVerifyPanel() {
 
   return (
     <Card>
-      <Eyebrow>Compliance check — live</Eyebrow>
+      <Eyebrow>CCP compliance check — live</Eyebrow>
       <div
         style={{
           marginTop: 10,
@@ -195,7 +238,7 @@ export function ValidatorVerifyPanel() {
         }}
       >
         <div style={{ fontFamily: "var(--font-source-serif)", fontSize: 21, letterSpacing: "-0.02em" }}>
-          Validator rule
+          Compliance Protocol rule
         </div>
         <button
           onClick={run}
@@ -208,53 +251,134 @@ export function ValidatorVerifyPanel() {
       </div>
 
       <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
-        Calls <span className="num">POST /validator/verify</span> against our registered pool. The
-        second wallet is generated at the moment you press the button.
+        Two independent answers to the same question, for each wallet:{" "}
+        <span className="num">POST /validator/verify</span> (REST) and{" "}
+        <span className="num">complianceVerify(pool, wallet)</span> read from the CCP validator at{" "}
+        <span className="num">{shortAddress("0xaC7e5179C2C7f03f209136886c172eb34F161792", 6)}</span>{" "}
+        (on-chain). They should always agree. The second wallet is generated at the moment you press
+        the button.
       </p>
 
       {result ? (
         <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
-          {result.results.map((r) => (
+          {/* The rule, stored on-chain in Cleanverse's own validator. Stronger
+              than any claim we could make about it. */}
+          <div
+            style={{
+              padding: 14,
+              borderRadius: "var(--r-inner)",
+              background: "var(--paper-sunk)",
+              border: "1px solid var(--ink-10)",
+            }}
+          >
+            <Eyebrow>Our rule, stored on-chain</Eyebrow>
+            <div className="num" style={{ marginTop: 8, fontSize: 12.5, lineHeight: 1.7 }}>
+              <div style={{ color: "var(--ink-55)" }}>
+                getRulesV2(pool) →{" "}
+                {result.onChain.rules.length ? (
+                  result.onChain.rules.map((r, i) => (
+                    <span key={i} style={{ color: "var(--ink)" }}>
+                      {ruleTuple(r)}
+                    </span>
+                  ))
+                ) : (
+                  <span>[]</span>
+                )}
+              </div>
+              <div style={{ marginTop: 4, color: "var(--ink-45)" }}>
+                (allowedGroup, allowedSubGroup, minTier, minSubTier, poolCountryBitmap) · isRegistered:{" "}
+                {String(result.onChain.registered)}
+              </div>
+            </div>
+          </div>
+
+          {/* Loud banner: REST and chain diverged. */}
+          {result.anyDisagreement ? (
             <div
-              key={r.address}
               style={{
                 padding: 14,
                 borderRadius: "var(--r-inner)",
-                background: r.valid ? "var(--paper-amber)" : "var(--paper-sunk)",
-                border: `1px solid ${r.valid ? "rgba(233,161,59,0.35)" : "var(--ink-10)"}`,
+                background: "#3a1512",
+                border: "1px solid #d9694f",
+                color: "#ffd9cf",
               }}
             >
+              <div style={{ fontSize: 14, fontWeight: 700 }}>REST and on-chain DISAGREE</div>
+              <p style={{ marginTop: 6, fontSize: 12.5, lineHeight: 1.6 }}>
+                The API and Cleanverse&apos;s validator contract returned different verdicts for a
+                wallet below. Neither is treated as authoritative. This is the case worth
+                investigating, not smoothing over.
+              </p>
+            </div>
+          ) : null}
+
+          {result.results.map((r) => {
+            const disagree = r.agree === false;
+            const both = r.restValid === true && r.chainValid === true;
+            return (
               <div
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}
+                key={r.address}
+                style={{
+                  padding: 14,
+                  borderRadius: "var(--r-inner)",
+                  background: disagree ? "#3a1512" : both ? "var(--paper-amber)" : "var(--paper-sunk)",
+                  border: `1px solid ${
+                    disagree ? "#d9694f" : both ? "rgba(233,161,59,0.35)" : "var(--ink-10)"
+                  }`,
+                  color: disagree ? "#ffd9cf" : undefined,
+                }}
               >
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600 }}>{r.label}</div>
-                  <div className="num" style={{ fontSize: 11.5, color: "var(--ink-55)", marginTop: 2 }}>
-                    {r.address}
+                <div
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}
+                >
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600 }}>{r.label}</div>
+                    <div
+                      className="num"
+                      style={{
+                        fontSize: 11.5,
+                        color: disagree ? "#ffb9a8" : "var(--ink-55)",
+                        marginTop: 2,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {r.address}
+                    </div>
                   </div>
+                  {disagree ? (
+                    <div className="num" style={{ fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>
+                      MISMATCH
+                    </div>
+                  ) : null}
                 </div>
+
+                <div style={{ marginTop: 12, display: "flex", gap: 12 }}>
+                  <Verdict label="REST · validator/verify" value={r.restValid} />
+                  <Verdict label="on-chain · complianceVerify" value={r.chainValid} />
+                </div>
+
+                {r.note ? (
+                  <p
+                    style={{
+                      marginTop: 10,
+                      fontSize: 12.5,
+                      lineHeight: 1.6,
+                      color: disagree ? "#ffd9cf" : "var(--ink-62)",
+                    }}
+                  >
+                    {r.note}
+                  </p>
+                ) : null}
                 <div
                   className="num"
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    color: r.valid ? "var(--amber-ink)" : "var(--ink-62)",
-                    whiteSpace: "nowrap",
-                  }}
+                  style={{ marginTop: 8, fontSize: 11.5, color: disagree ? "#ffb9a8" : "var(--ink-55)" }}
                 >
-                  valid: {String(r.valid)}
+                  token rule: code {r.tokenCode ?? "—"} · {r.tokenMessage}
                 </div>
               </div>
-              {r.note ? (
-                <p style={{ marginTop: 8, fontSize: 12.5, lineHeight: 1.6, color: "var(--ink-62)" }}>
-                  {r.note}
-                </p>
-              ) : null}
-              <div className="num" style={{ marginTop: 8, fontSize: 11.5, color: "var(--ink-55)" }}>
-                token rule: code {r.tokenCode ?? "—"} · {r.tokenMessage}
-              </div>
-            </div>
-          ))}
+            );
+          })}
           <div className="num" style={{ fontSize: 11, color: "var(--ink-45)" }}>
             checked {result.checkedAt}
           </div>

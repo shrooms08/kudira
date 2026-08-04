@@ -21,18 +21,22 @@ Deployed on Base Sepolia (chain 84532):
   MerchantRegistry   0x05e2A2473e710435484f6B3b288677618E95bB15
   Settlement asset   0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E  (KUSDC)
 
-The pool is registered through validator/register and its rule is enforced live
-by validator/verify. A full origination ran on-chain: the merchant paid in one
+The pool integrates the Cleanverse Compliance Protocol (CCP) as a single-contract
+lending pool. It is registered through validator/register, and its rule is
+enforced live by validator/verify, whose on-chain twin complianceVerify on the
+CCP validator (0xaC7e5179C2C7f03f209136886c172eb34F161792) returns the same
+answer to any reader. A full origination ran on-chain: the merchant paid in one
 transaction, four installments auto-debited, the borrower's grade climbing 50 to
 70 as it repaid, plus a deliberate negative test that reverts BorrowerDelinquent.
 The seven transaction hashes are in the README.
 
-One disclosure worth making plainly. We settle in KUSDC, an A-Token we issued
-ourselves under our Issue Member scope, because the Base institution faucet has
-been unable to dispense aUSDC since 24 July. KUSDC carries the same min_tier 5
-rule as aUSDC and is gated identically on-chain for both parties. We control its
-supply but not its credential gate: a transfer to an address without a valid
-A-Pass reverts inside the token, and nothing we control changes that. The README
+One disclosure worth making plainly. We settle in KUSDC, a CVA (Cleanverse
+Verified Asset) we issued through the documented /atoken/launch path under our
+Issue Member scope, because the Base institution faucet has been unable to
+dispense aUSDC since 24 July. KUSDC carries the same min_tier 5 rule as aUSDC and
+is gated identically on-chain for both parties. We control its supply but not its
+credential gate: a transfer to an address without a valid A-Pass reverts inside
+the token, and nothing we control changes that. The README
 documents the faucet issue in detail, along with four other findings from
 building against the live sandbox.
 

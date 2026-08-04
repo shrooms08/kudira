@@ -21,12 +21,16 @@ A-Pass is bank-verified, wallet-bound, non-transferable and revocable. That is w
 credential carry risk that collateral would otherwise have to. Remove Cleanverse from
 Kudira and you do not get a degraded product. You get nothing.
 
-## Settlement asset: KUSDC is our own token
+## Settlement asset: KUSDC is a CVA we issued
 
-Kudira settles in **KUSDC** (`0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E`), an A-Token we
-launched ourselves through `/atoken/launch` under our Issue Member scope. We hold
-`DEFAULT_ADMIN_ROLE` on it and we control its supply. It is not a Cleanverse-issued asset
-and we do not present it as one.
+Kudira settles in **KUSDC** (`0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E`), a **CVA
+(Cleanverse Verified Asset)** we issued through the documented `/atoken/launch` path
+(Method A of the Cleanverse Compliance Protocol (CCP) CVA integration guide) under our
+Issue Member scope. A CVA is CCP's native compliant-asset standard: an ERC20 whose every
+transfer is gated through Cleanverse identity verification. This is a first-class issuance
+path, not a workaround. We hold `DEFAULT_ADMIN_ROLE` on KUSDC and control its supply. We do
+not present it as a Cleanverse-operated asset like aUSDC; we present it as our own CVA,
+which is exactly what the launch path produces.
 
 The one thing to take from this section: **we can mint KUSDC, but we cannot mint past a
 credential check.** The gate is Cleanverse's, not ours. A transfer to an address without a
@@ -118,16 +122,23 @@ service on the Cleanverse network, which is disproportionate for a missed instal
 worse, would remove their ability to transfer the asset they need in order to cure the
 debt. A penalty must not destroy the means of repayment.
 
-**The Validator compliance pool.** KudiraPool is registered through `validator/grant` and
-`validator/register`, and `validator/verify` answers whether a given wallet satisfies the
-pool's rule. The contract mirrors that rule on-chain in `satisfiesRule`, using strictly
+**The CCP Validator compliance pool.** KudiraPool integrates the Cleanverse Compliance
+Protocol (CCP) as a single-contract lending pool, the first use case its own validator
+guide lists: "verify borrower CVI to filter compliant borrowers." The on-chain contract
+behind the Validator module is CCP's `IAPassComplianceValidator`, live on Base Sepolia at
+`0xaC7e5179C2C7f03f209136886c172eb34F161792`. KudiraPool is registered through
+`validator/grant` and `validator/register`; `validator/verify` answers whether a wallet
+satisfies the pool's rule, and its on-chain twin `complianceVerify(pool, wallet)` returns
+the same answer to anyone who reads it. The validator holds our rule on-chain:
+`getRulesV2(pool)` returns `(minTier 5, minSubTier 0, no country restriction)`, exactly the
+`min_tier 5` we set. Our contract also mirrors that rule in `satisfiesRule`, using strictly
 greater than rather than greater than or equal, because that is what Cleanverse does. A
 mirror can drift, so the checkout path calls both and surfaces any disagreement rather
 than silently trusting one.
 
-**A-Token settlement.** Every transfer of the settlement asset is gated on-chain against
-A-Pass standing for both parties. This is not something Kudira enforces; it is enforced by
-the token whether we like it or not.
+**CVA settlement.** Every transfer of the settlement CVA is gated on-chain against A-Pass
+standing for both parties. This is not something Kudira enforces; it is enforced by the CVA
+whether we like it or not.
 
 ## What we found
 
@@ -175,7 +186,7 @@ not found` for our settlements, and the reason is precise rather than a dead end
 call with another institution's wallet returns `CV_100 Wallet not found for this customer`.
 That contrast isolates the cause: ownership scoping passes and only the transaction lookup
 fails. Travel Rule reporting is bound to Cleanverse's indexed settlement flow, and KUSDC,
-a standard A-Token with no deposit pair, sits outside it. Settle in aUSDC and the record
+a CVA with no deposit pair, sits outside it. Settle in aUSDC and the record
 generates. The compliance layer is not missing; our asset is outside its index. The
 merchant dashboard calls the live endpoint and renders that explanation next to the actual
 response, because a live failure with a correct diagnosis is worth more than a mocked PDF.

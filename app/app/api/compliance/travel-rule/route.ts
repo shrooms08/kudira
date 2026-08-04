@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       ? {
           headline: "Not indexed for Travel Rule",
           detail:
-            "Travel Rule reporting is bound to Cleanverse's indexed settlement flow. KUSDC sits outside it — a standard A-Token with no deposit pair, issued under our own Issue Member scope after the Base faucet stopped dispensing aUSDC on 24 July. Settle in aUSDC and this record generates. The compliance layer isn't missing; the asset is outside its index.",
+            "Travel Rule reporting is bound to Cleanverse's indexed settlement flow. KUSDC sits outside it: a CVA (Cleanverse Verified Asset) with no deposit pair, issued through Cleanverse's documented /atoken/launch path after the Base faucet stopped dispensing aUSDC on 24 July. Settle in aUSDC and this record generates. The compliance layer isn't missing; the asset is outside its index.",
           proof:
             "The wallet was accepted. A wallet belonging to another institution returns CV_100 instead, so ownership scoping passed and only the transaction lookup failed.",
         }
