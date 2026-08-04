@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { LadderTable, NextPayment, PlanList, StandingCard } from "@/components/account/AccountViews";
-import { GradeBadge, Logo } from "@/components/brand/Primitives";
+import { Logo } from "@/components/brand/Primitives";
 import { getAllPlans, getStanding } from "@/lib/chain";
 import { ACTORS, ADDRESSES } from "@/lib/contracts";
 import { explorerAddress, formatAmount, shortAddress } from "@/lib/format";
@@ -20,19 +20,10 @@ export default async function AccountPage() {
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--paper)", paddingBottom: 110 }}>
-      {/* Top bar */}
-      <header
-        style={{
-          padding: "16px 20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      {/* Top bar. Normal flow, so it scrolls away with the content. The grade
+          badge lives in the Standing card below, not here, so it is shown once. */}
+      <header style={{ padding: "16px 20px" }}>
         <Logo />
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <GradeBadge band={standing.band} />
-        </div>
       </header>
 
       <div style={{ maxWidth: 480, margin: "0 auto", padding: "8px 20px", display: "grid", gap: 12 }}>

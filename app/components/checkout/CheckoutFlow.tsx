@@ -2,10 +2,18 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useConnect,
+  useReadContract,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 
 import { Amount, Card, Eyebrow, GradeBadge, Logo } from "@/components/brand/Primitives";
-import { ADDRESSES, creditLineAbi, erc20Abi } from "@/lib/contracts";
+import { ADDRESSES, CHAIN_ID, creditLineAbi, erc20Abi } from "@/lib/contracts";
 import { explorerTx, formatAmount, formatGrade, shortAddress } from "@/lib/format";
 
 const TOTAL = 130_000_000n;
@@ -35,6 +43,12 @@ type ApassRead = {
 export function CheckoutFlow() {
   const { address, isConnected } = useAccount();
   const { connect, connectors, isPending: connecting } = useConnect();
+  // A wallet can be connected but on the wrong network. Catch that at connect,
+  // not at the signing step: an approve on Ethereum mainnet fails with an opaque
+  // "not enough gas" because there is no KUSDC or plan there at all.
+  const chainId = useChainId();
+  const { switchChain, isPending: switching, error: switchError } = useSwitchChain();
+  const wrongChain = isConnected && chainId !== CHAIN_ID;
 
   const [apass, setApass] = useState<ApassRead | null>(null);
   const [reading, setReading] = useState(false);
@@ -151,8 +165,50 @@ export function CheckoutFlow() {
           )}
         </Card>
 
+        {/* --- Wrong network: block everything downstream until it is fixed -- */}
+        {isConnected && wrongChain ? (
+          <Card style={{ border: "1px solid var(--ink-16)" }}>
+            <Eyebrow>Wrong network</Eyebrow>
+            <div
+              style={{
+                marginTop: 8,
+                fontFamily: "var(--font-source-serif)",
+                fontSize: 25,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Switch to Base Sepolia
+            </div>
+            <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
+              Your wallet is on chain <span className="num">{chainId}</span>. Kudira lives on Base
+              Sepolia (<span className="num">{CHAIN_ID}</span>). Nothing can be signed until you
+              switch, so we stop you here rather than at the payment step.
+            </p>
+            <button
+              onClick={() => switchChain({ chainId: CHAIN_ID })}
+              disabled={switching}
+              className="btn-amber"
+              style={{
+                marginTop: 14,
+                padding: "12px 22px",
+                fontSize: 14,
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {switching ? "Confirm in your wallet…" : "Switch to Base Sepolia"}
+            </button>
+            {switchError ? (
+              <p style={{ marginTop: 10, fontSize: 12.5, color: "var(--ink-72)" }}>
+                {switchError.message.split("\n")[0]}. You may need to add Base Sepolia to your wallet
+                first.
+              </p>
+            ) : null}
+          </Card>
+        ) : null}
+
         {/* --- Step 2: the credential read -------------------------------- */}
-        {isConnected ? (
+        {isConnected && !wrongChain ? (
           <Card>
             <Eyebrow>Step 2 of 3 · A-Pass read · validator compliance check</Eyebrow>
             {reading ? (
@@ -227,7 +283,7 @@ export function CheckoutFlow() {
         ) : null}
 
         {/* --- Step 3: the plan, and the buyer's own signature ------------- */}
-        {isConnected && eligible ? (
+        {isConnected && !wrongChain && eligible ? (
           <Card>
             <Eyebrow>Step 3 of 3 · Your payment</Eyebrow>
             <div style={{ marginTop: 12 }}>
@@ -235,7 +291,7 @@ export function CheckoutFlow() {
               <span style={{ fontSize: 15, color: "var(--ink-62)", marginLeft: 8 }}>× {INSTALLMENTS}</span>
             </div>
             <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)" }}>
-              <span className="num">{formatAmount(TOTAL)}</span> total · every 2 weeks · 0% interest
+              <span className="num">{formatAmount(TOTAL)}</span> total · every week · 0% interest
             </p>
 
             <div style={{ marginTop: 16 }}>
@@ -305,7 +361,7 @@ export function CheckoutFlow() {
           </Card>
         ) : null}
 
-        {isConnected && apass && !reading && !eligible ? (
+        {isConnected && !wrongChain && apass && !reading && !eligible ? (
           <Card>
             <Eyebrow>Not eligible</Eyebrow>
             <p style={{ marginTop: 10, fontSize: 13.5, lineHeight: 1.7, color: "var(--ink-72)" }}>
@@ -343,11 +399,13 @@ export function CheckoutFlow() {
           <div style={{ fontSize: 12.5, color: "var(--ink-62)" }}>
             {!isConnected
               ? "Connect to continue"
-              : !eligible
-                ? "Credential required"
-                : hasAllowance
-                  ? "Authorised — Kudira will originate the plan"
-                  : "Approve to authorise auto-debit"}
+              : wrongChain
+                ? "Switch to Base Sepolia"
+                : !eligible
+                  ? "Credential required"
+                  : hasAllowance
+                    ? "Authorised, Kudira will originate the plan"
+                    : "Approve to authorise auto-debit"}
           </div>
           <Link href="/account" style={{ fontSize: 13, color: "var(--ink-68)" }}>
             {formatGrade((band as string) ?? "")} · Account →
