@@ -61,6 +61,11 @@ export function CheckoutFlow() {
   const [apass, setApass] = useState<ApassRead | null>(null);
   const [reading, setReading] = useState(false);
 
+  // Origination: the buyer's Confirm creates the plan server-side (operator key).
+  const [originating, setOriginating] = useState(false);
+  const [originated, setOriginated] = useState<{ txHash: string; planId: string } | null>(null);
+  const [originateError, setOriginateError] = useState<string | null>(null);
+
   // Standing comes from the chain, not from the API read — the on-chain grade is
   // canonical between deliberate syncs.
   const { data: band } = useReadContract({
@@ -109,6 +114,26 @@ export function CheckoutFlow() {
 
   const hasAllowance = typeof allowance === "bigint" && allowance >= TOTAL;
   const eligible = apass?.satisfiesPoolRule === true && apass?.canHoldSettlementAsset === true;
+
+  async function confirmPlan() {
+    if (!address || originating) return;
+    setOriginating(true);
+    setOriginateError(null);
+    try {
+      const res = await fetch("/api/originate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ borrower: address, principal: TOTAL.toString(), installments: INSTALLMENTS }),
+      });
+      const data = await res.json();
+      if (data.ok) setOriginated({ txHash: data.txHash, planId: String(data.planId) });
+      else setOriginateError(originateReason(data));
+    } catch {
+      setOriginateError("Network error reaching the originator. Try again.");
+    } finally {
+      setOriginating(false);
+    }
+  }
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--paper)", paddingBottom: 140 }}>
@@ -215,8 +240,47 @@ export function CheckoutFlow() {
           </Card>
         ) : null}
 
+        {/* --- Success: the plan was created ------------------------------ */}
+        {originated ? (
+          <Card style={{ border: "1px solid rgba(233,161,59,0.45)" }}>
+            <Eyebrow>Plan created</Eyebrow>
+            <div
+              style={{
+                marginTop: 8,
+                fontFamily: "var(--font-source-serif)",
+                fontSize: 25,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Merchant paid. Plan #{originated.planId} is live.
+            </div>
+            <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
+              Kudira paid <span className="num">{formatAmount(TOTAL)}</span> KUSDC to the merchant in
+              full, and your {INSTALLMENTS} weekly installments are now scheduled. You already
+              approved the auto-debit, so there is nothing else to sign.
+            </p>
+            <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+              <a
+                href={explorerTx(originated.txHash)}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-amber"
+                style={{ padding: "12px 20px", fontSize: 14, textDecoration: "none" }}
+              >
+                View transaction ↗
+              </a>
+              <Link href="/account" style={{ fontSize: 14, color: "var(--ink-68)" }}>
+                Go to account →
+              </Link>
+            </div>
+            <div className="num" style={{ marginTop: 12, fontSize: 11.5, color: "var(--ink-55)" }} title={originated.txHash}>
+              {shortAddress(originated.txHash, 8)}
+            </div>
+          </Card>
+        ) : null}
+
         {/* --- Step 2: the credential read -------------------------------- */}
-        {isConnected && !wrongChain ? (
+        {isConnected && !wrongChain && !originated ? (
           <Card>
             <Eyebrow>Step 2 of 3 · A-Pass read · validator compliance check</Eyebrow>
             {reading ? (
@@ -291,7 +355,7 @@ export function CheckoutFlow() {
         ) : null}
 
         {/* --- Step 3: the plan, and the buyer's own signature ------------- */}
-        {isConnected && !wrongChain && eligible ? (
+        {isConnected && !wrongChain && eligible && !originated ? (
           <Card>
             <Eyebrow>Step 3 of 3 · Your payment</Eyebrow>
             <div style={{ marginTop: 12 }}>
@@ -310,27 +374,49 @@ export function CheckoutFlow() {
               </p>
 
               {hasAllowance ? (
-                <div
-                  style={{
-                    marginTop: 12,
-                    padding: 12,
-                    borderRadius: "var(--r-input)",
-                    background: "var(--paper-amber)",
-                    border: "1px solid rgba(233,161,59,0.35)",
-                    fontSize: 13,
-                  }}
-                >
-                  Authorised. Allowance{" "}
-                  <span className="num">{formatAmount(allowance as bigint)}</span> KUSDC.
-                  {approveHash ? (
-                    <>
-                      {" "}
-                      <a href={explorerTx(approveHash)} target="_blank" rel="noreferrer" className="num">
-                        view tx
-                      </a>
-                    </>
+                <>
+                  <div
+                    style={{
+                      marginTop: 12,
+                      padding: 12,
+                      borderRadius: "var(--r-input)",
+                      background: "var(--paper-amber)",
+                      border: "1px solid rgba(233,161,59,0.35)",
+                      fontSize: 13,
+                    }}
+                  >
+                    Authorised. Allowance{" "}
+                    <span className="num">{formatAmount(allowance as bigint)}</span> KUSDC.
+                    {approveHash ? (
+                      <>
+                        {" "}
+                        <a href={explorerTx(approveHash)} target="_blank" rel="noreferrer" className="num">
+                          view tx
+                        </a>
+                      </>
+                    ) : null}
+                  </div>
+                  <button
+                    onClick={confirmPlan}
+                    disabled={originating}
+                    className="btn-amber"
+                    style={{
+                      marginTop: 12,
+                      padding: "14px 24px",
+                      fontSize: 15,
+                      border: "none",
+                      cursor: "pointer",
+                      width: "100%",
+                    }}
+                  >
+                    {originating ? "Creating plan…" : "Confirm and create plan"}
+                  </button>
+                  {originateError ? (
+                    <p style={{ marginTop: 10, fontSize: 12.5, color: "var(--ink-72)", lineHeight: 1.6 }}>
+                      {originateError}
+                    </p>
                   ) : null}
-                </div>
+                </>
               ) : (
                 <button
                   onClick={() =>
@@ -369,7 +455,7 @@ export function CheckoutFlow() {
           </Card>
         ) : null}
 
-        {isConnected && !wrongChain && apass && !reading && !eligible ? (
+        {isConnected && !wrongChain && apass && !reading && !eligible && !originated ? (
           <Card>
             <Eyebrow>Not eligible</Eyebrow>
             <p style={{ marginTop: 10, fontSize: 13.5, lineHeight: 1.7, color: "var(--ink-72)" }}>
@@ -405,15 +491,19 @@ export function CheckoutFlow() {
           }}
         >
           <div style={{ fontSize: 12.5, color: "var(--ink-62)" }}>
-            {!isConnected
-              ? "Connect to continue"
-              : wrongChain
-                ? "Switch to Base Sepolia"
-                : !eligible
-                  ? "Credential required"
-                  : hasAllowance
-                    ? "Authorised, Kudira will originate the plan"
-                    : "Approve to authorise auto-debit"}
+            {originated
+              ? "Plan created"
+              : !isConnected
+                ? "Connect to continue"
+                : wrongChain
+                  ? "Switch to Base Sepolia"
+                  : !eligible
+                    ? "Credential required"
+                    : originating
+                      ? "Creating plan…"
+                      : hasAllowance
+                        ? "Confirm to create the plan"
+                        : "Approve to authorise auto-debit"}
           </div>
           <Link href="/account" style={{ fontSize: 13, color: "var(--ink-68)" }}>
             {formatGrade((band as string) ?? "")} · Account →
@@ -422,6 +512,45 @@ export function CheckoutFlow() {
       </div>
     </main>
   );
+}
+
+/// Map a refusal from /api/originate to a line the buyer can read. The server
+/// never leaks internals; these are all business outcomes.
+function originateReason(data: { reason?: string; errorName?: string; restValid?: boolean; chainValid?: boolean }): string {
+  switch (data.reason) {
+    case "no_apass":
+      return "No A-Pass found for this wallet. There is nothing to underwrite against.";
+    case "apass_inactive":
+      return "This wallet's A-Pass is not active. It cannot be underwritten.";
+    case "compliance_disagreement":
+      return `The REST validator and the on-chain validator disagree about this wallet (REST ${String(data.restValid)}, on-chain ${String(data.chainValid)}). Refusing rather than guessing.`;
+    case "not_compliant":
+      return "This wallet does not satisfy the pool's registered rule.";
+    case "allowance_too_low":
+      return "Your approval does not cover the first installment. Approve again before confirming.";
+    case "originate_reverts":
+      switch (data.errorName) {
+        case "ExceedsCreditLimit":
+          return "This purchase is above your available credit limit.";
+        case "InsufficientLiquidity":
+          return "The pool does not currently hold enough liquidity for this plan.";
+        case "BorrowerDelinquent":
+          return "This wallet is delinquent and cannot open a new plan.";
+        case "ApassRuleNotSatisfied":
+          return "This wallet's tier does not satisfy the pool rule.";
+        case "MerchantNotActive":
+          return "The merchant is not active in the registry.";
+        default:
+          return "Origination would revert on-chain. Nothing was created.";
+      }
+    case "validator_unreachable":
+    case "compliance_unreadable":
+      return "The compliance check could not be completed. Try again in a moment.";
+    case "broadcast_failed":
+      return "The plan could not be broadcast. The operator may be out of gas. Try again.";
+    default:
+      return "Origination was refused. Nothing was created.";
+  }
 }
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
