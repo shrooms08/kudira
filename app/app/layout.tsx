@@ -1,26 +1,26 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
+import { Archivo, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-// Three families, strict division of labour (design/TOKENS.md §2):
-//   Source Serif 4  headings and display
-//   IBM Plex Sans   body, UI, labels
-//   IBM Plex Mono   ALL numbers
-// Only weights 500 and 600 exist in the design.
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+// Kudira Indigo — three families (design/INDIGO_TOKENS.md §2):
+//   Instrument Serif  display and headings
+//   Archivo           body, UI, labels
+//   JetBrains Mono    EVERY figure, label, eyebrow (tabular-nums)
+// Self-hosted by next/font — no runtime external request.
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "500", "600"],
 });
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400"],
 });
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${sourceSerif.variable} ${plexSans.variable} ${plexMono.variable}`}>
+      <body className={`${archivo.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}>
         {children}
       </body>
     </html>

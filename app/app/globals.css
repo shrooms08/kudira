@@ -1,84 +1,69 @@
 @import "tailwindcss";
 
-/* Kudira design tokens. Extracted from design/*.html — see design/TOKENS.md.
-   Defined ONCE here rather than copied inline from the bundles. */
+/* Kudira Indigo tokens. Extracted once from design/Kudira Indigo.html —
+   see design/INDIGO_TOKENS.md. Defined here, never copied inline. */
 
 :root {
-  /* Core */
-  --ink: #14161f;
-  --ink-raised: #23262f;
-  --amber: #e9a13b;
-  --amber-light: #f2b25b;
-  --amber-deep: #d8912e;
-  --amber-ink: #b87516;
-  --amber-shadow: #8a5610;
+  --canvas: #000000;
+  --raised: #141414;
+  --raised-2: #1e1e1e;
+  --accent: #c4f82a;
+  --accent-hi: #d4ff45;
+  --bone: #f5f5f0;
+  --signal: #00d084;
+  --warn: #ff6b4a;
 
-  /* Warm neutrals */
-  --paper: #faf8f5;
-  --paper-sunk: #efebe4;
-  --paper-amber: #fdf7ec;
-  --white: #ffffff;
+  /* Bone text alphas — rgba(245,245,240,α). 0.62 is the workhorse body. */
+  --bone-75: rgba(245, 245, 240, 0.75);
+  --bone-62: rgba(245, 245, 240, 0.62);
+  --bone-55: rgba(245, 245, 240, 0.55);
+  --bone-50: rgba(245, 245, 240, 0.5);
+  --bone-42: rgba(245, 245, 240, 0.42);
 
-  /* Ink alphas — text hierarchy. 0.68 is the workhorse secondary. */
-  --ink-90: rgba(20, 22, 31, 0.9);
-  --ink-82: rgba(20, 22, 31, 0.82);
-  --ink-75: rgba(20, 22, 31, 0.75);
-  --ink-72: rgba(20, 22, 31, 0.72);
-  --ink-68: rgba(20, 22, 31, 0.68);
-  --ink-62: rgba(20, 22, 31, 0.62);
-  --ink-55: rgba(20, 22, 31, 0.55);
-  --ink-45: rgba(20, 22, 31, 0.45);
+  /* Hairlines on dark. 0.14 default divider, 0.09 card border, 0.28 outline. */
+  --line-28: rgba(245, 245, 240, 0.28);
+  --line-14: rgba(245, 245, 240, 0.14);
+  --line-09: rgba(245, 245, 240, 0.09);
+  --line-08: rgba(245, 245, 240, 0.08);
 
-  /* Ink alphas — hairlines and shadow. 0.08 is the default divider. */
-  --ink-22: rgba(20, 22, 31, 0.22);
-  --ink-16: rgba(20, 22, 31, 0.16);
-  --ink-12: rgba(20, 22, 31, 0.12);
-  --ink-10: rgba(20, 22, 31, 0.1);
-  --ink-08: rgba(20, 22, 31, 0.08);
-  --ink-06: rgba(20, 22, 31, 0.06);
-  --ink-04: rgba(20, 22, 31, 0.04);
+  /* Signal / warn tints */
+  --signal-14: rgba(0, 208, 132, 0.14);
+  --warn-14: rgba(255, 107, 74, 0.14);
 
-  /* White alphas — on dark surfaces, and the glass fill */
-  --white-72: rgba(255, 255, 255, 0.72);
-  --white-60: rgba(255, 255, 255, 0.6);
-  --white-40: rgba(255, 255, 255, 0.4);
-  --white-09: rgba(255, 255, 255, 0.09);
+  /* Elevation: deep drop + inset highlight/shadow (the raised-card deboss). */
+  --shadow-card: 0 26px 54px -22px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(245, 245, 240, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.8);
 
-  /* THE elevation. Two layers: 1px contact + wide soft ambient. */
-  --shadow-card: 0 1px 2px rgba(20, 22, 31, 0.04), 0 8px 24px rgba(20, 22, 31, 0.06);
-  --shadow-row: 0 1px 3px rgba(20, 22, 31, 0.1);
-  --shadow-up: 0 -8px 32px rgba(20, 22, 31, 0.06);
-  --shadow-cta: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 8px 18px -8px rgba(216, 145, 46, 0.8);
+  /* The debossed-grade text treatment: struck into the surface. */
+  --deboss: 0 1px 0 rgba(245, 245, 240, 0.16), 0 -1px 0 rgba(0, 0, 0, 0.95);
 
-  /* Radii */
-  --r-sheet: 28px;
-  --r-card: 24px;
+  /* The single motion easing. Used in exactly three places. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --r-card: 28px;
   --r-inner: 18px;
   --r-input: 12px;
   --r-pill: 999px;
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-ink-raised: var(--ink-raised);
-  --color-amber: var(--amber);
-  --color-amber-deep: var(--amber-deep);
-  --color-amber-ink: var(--amber-ink);
-  --color-paper: var(--paper);
-  --color-paper-sunk: var(--paper-sunk);
-  --color-paper-amber: var(--paper-amber);
-  --font-serif: var(--font-source-serif);
-  --font-sans: var(--font-plex-sans);
-  --font-mono: var(--font-plex-mono);
+  --color-canvas: var(--canvas);
+  --color-raised: var(--raised);
+  --color-raised-2: var(--raised-2);
+  --color-accent: var(--accent);
+  --color-bone: var(--bone);
+  --color-signal: var(--signal);
+  --color-warn: var(--warn);
+  --font-serif: var(--font-instrument-serif);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 html,
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
-  /* Only 500 and 600 exist in the design. There is no 400 and no 700. */
-  font-weight: 500;
+  background: var(--canvas);
+  color: var(--bone);
+  font-family: var(--font-archivo), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -86,54 +71,77 @@ a {
   color: inherit;
   text-decoration: none;
 }
-a:hover {
-  color: var(--amber-ink);
-}
 
-/* --- Reusable pieces of the design language ------------------------------- */
+/* --- Type helpers --------------------------------------------------------- */
 
-/* Uppercase section label: 10-11px + 0.18em tracking. Used everywhere. */
+/* Uppercase mono eyebrow. Instrument Serif never carries a label. */
 .eyebrow {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ink-45);
+  color: var(--bone-55);
 }
 
-.card {
-  background: var(--white);
-  border-radius: var(--r-card);
-  box-shadow: var(--shadow-card);
+.serif {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  letter-spacing: -0.01em;
 }
 
-/* EVERY number is IBM Plex Mono. It is monospaced, so figures align in columns
-   without needing font-variant-numeric. If a figure ever renders in Plex Sans,
-   add tabular-nums there or the column will break. */
+/* EVERY figure: JetBrains Mono + tabular. If a number renders in Archivo the
+   column breaks — always route figures through here. */
 .num {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
 
-/* GLASS. Permitted on exactly two elements: the sticky checkout pay bar and the
-   floating bottom nav. NEVER behind a number — blur costs legibility on exactly
-   the element that has to be trusted. Anything else that wants this wants
-   elevation instead: use .card. */
-.glass {
-  background: var(--white-72);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+/* The grade struck into a surface. */
+.deboss {
+  color: #181818;
+  text-shadow: var(--deboss);
 }
 
-.btn-amber {
-  background: linear-gradient(180deg, var(--amber-light), var(--amber-deep));
-  color: var(--ink);
-  border-radius: var(--r-pill);
-  box-shadow: var(--shadow-cta);
-  font-weight: 600;
+/* --- Adire motifs. Colours %23-encoded or the pattern renders invisible. --- */
+
+.ku-m-dots {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Cg fill='%23262626'%3E%3Ccircle cx='4.5' cy='4.5' r='1.1'/%3E%3Ccircle cx='13.5' cy='13.5' r='1.1'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
 }
-.btn-amber:disabled {
-  opacity: 0.45;
-  box-shadow: none;
+.ku-m-stripes {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cg stroke='%23262626' stroke-width='1' fill='none'%3E%3Cpath d='M0 5 H11'/%3E%3Cpath d='M14 5 H20'/%3E%3Cpath d='M0 15 H6'/%3E%3Cpath d='M9 15 H20'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+.ku-m-circles {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34'%3E%3Cg fill='none' stroke='%23262626' stroke-width='1'%3E%3Ccircle cx='17' cy='17' r='16'/%3E%3Ccircle cx='17' cy='17' r='10'/%3E%3Ccircle cx='17' cy='17' r='4.25'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+.ku-stamp {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cg fill='%23A5D423'%3E%3Ccircle cx='3' cy='3' r='0.7'/%3E%3Ccircle cx='9' cy='9' r='0.7'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* THE WEAVE — 9px plain over-under, the densest surface in the product.
+   A narrow value band around the #141414 face: valleys #0E0E0E, thread bodies
+   #15/#16, lit edges #1F/#1C. Reads as cloth at card size, not noise at 512px. */
+.ku-weave {
+  background-color: var(--raised);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Crect width='9' height='9' fill='%230E0E0E'/%3E%3Crect x='0' y='0' width='4' height='4' fill='%23161616'/%3E%3Crect x='5' y='5' width='4' height='4' fill='%23161616'/%3E%3Crect x='5' y='0' width='4' height='4' fill='%23151515'/%3E%3Crect x='0' y='5' width='4' height='4' fill='%23151515'/%3E%3Crect x='0' y='0' width='4' height='1' fill='%231F1F1F'/%3E%3Crect x='5' y='5' width='4' height='1' fill='%231F1F1F'/%3E%3Crect x='5' y='0' width='1' height='4' fill='%231C1C1C'/%3E%3Crect x='0' y='5' width='1' height='4' fill='%231C1C1C'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* --- Controls ------------------------------------------------------------- */
+
+.btn-accent {
+  background: var(--accent);
+  color: #0a0a0a;
+  border-radius: var(--r-pill);
+  border: none;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.btn-accent:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
