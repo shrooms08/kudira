@@ -68,14 +68,11 @@ export function Storefront() {
                     opacity: n === 0 ? 0.55 : 1,
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-                    <div className="ku-card-circles" style={{ width: 44, height: 44, borderRadius: 12, border: "1px solid var(--line-09)", flex: "none" }} />
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: 14, color: "var(--bone)" }}>{item.name}</div>
-                      <div style={{ fontSize: 12, color: "var(--bone-55)", marginTop: 2 }}>{item.detail}</div>
-                      <div className="num" style={{ fontSize: 12, color: "var(--bone-62)", marginTop: 4 }}>
-                        <Amount value={item.price} /> each
-                      </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 15, color: "var(--bone)" }}>{item.name}</div>
+                    <div style={{ fontSize: 12.5, color: "var(--bone-55)", marginTop: 3 }}>{item.detail}</div>
+                    <div className="num" style={{ fontSize: 12.5, color: "var(--bone-62)", marginTop: 5 }}>
+                      <Amount value={item.price} /> each
                     </div>
                   </div>
                   <Stepper value={n} onChange={(v) => setItem(item.id, v)} />
@@ -86,18 +83,19 @@ export function Storefront() {
         </Card>
 
         <Card>
-          <Eyebrow>First payment</Eyebrow>
+          <Eyebrow>Total</Eyebrow>
           <div style={{ marginTop: 12 }}>
-            <Amount value={perInstallment} unit="KUSDC" size="hero" />
+            <Amount value={total} unit="KUSDC" size="hero" />
           </div>
           <p style={{ marginTop: 12, fontSize: 13.5, color: "var(--bone-62)", lineHeight: 1.6 }}>
+            4 payments of{" "}
             <span className="num">
-              <Amount value={total} />
+              <Amount value={perInstallment} />
             </span>{" "}
-            total, split into 4 payments. No interest, no fees.
+            · no interest, no fees.
           </p>
           <p style={{ marginTop: 8, fontSize: 12.5, color: "var(--bone-55)", lineHeight: 1.6 }}>
-            {MERCHANT_NAME} is paid in full today. Kudira carries the credit risk, underwritten
+            {MERCHANT_NAME} is paid in full at checkout. Kudira carries the credit risk, underwritten
             against your A-Pass.
           </p>
         </Card>
