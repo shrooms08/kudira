@@ -42,7 +42,13 @@ export function CheckoutFlow({ amount }: { amount?: bigint }) {
   // The bag total from the storefront, floored at 0. Falls back to the demo
   // default when the checkout is opened directly without a cart.
   const TOTAL = amount && amount > 0n ? amount : DEFAULT_TOTAL;
-  const PER = TOTAL / BigInt(INSTALLMENTS);
+  // The buyer picks the installment count at the offer step. Default 4 keeps the
+  // flow identical when untouched; only 3, 4, 6 are offered and the server
+  // re-validates. per = floor(principal / n), matching the contract, so the
+  // final installment carries the remainder exactly as the chain does.
+  const [installments, setInstallments] = useState<number>(INSTALLMENTS);
+  const PER = TOTAL / BigInt(installments);
+  const hasRemainder = TOTAL % BigInt(installments) !== 0n;
 
   const { address, isConnected, chainId } = useAccount();
   const { connect, connectors, isPending: connecting } = useConnect();
@@ -127,7 +133,7 @@ export function CheckoutFlow({ amount }: { amount?: bigint }) {
       const res = await fetch("/api/originate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ borrower: address, principal: TOTAL.toString(), installments: INSTALLMENTS }),
+        body: JSON.stringify({ borrower: address, principal: TOTAL.toString(), installments }),
       });
       const data = await res.json();
       if (data.ok) setOriginated({ txHash: data.txHash, planId: String(data.planId) });
@@ -260,7 +266,7 @@ export function CheckoutFlow({ amount }: { amount?: bigint }) {
             </div>
             <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
               Kudira paid <span className="num">{formatAmount(TOTAL)}</span> KUSDC to the merchant in
-              full, and your {INSTALLMENTS} weekly installments are now scheduled. You already
+              full, and your {installments} weekly installments are now scheduled. You already
               approved the auto-debit, so there is nothing else to sign.
             </p>
             <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
@@ -364,10 +370,61 @@ export function CheckoutFlow({ amount }: { amount?: bigint }) {
             <Eyebrow>Step 3 of 3 · Your payment</Eyebrow>
             <div style={{ marginTop: 12 }}>
               <Amount value={PER} unit="KUSDC" size="large" />
-              <span style={{ fontSize: 15, color: "var(--ink-62)", marginLeft: 8 }}>× {INSTALLMENTS}</span>
+              <span style={{ fontSize: 15, color: "var(--ink-62)", marginLeft: 8 }}>× {installments}</span>
             </div>
-            <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)" }}>
+
+            {/* Installment selector. Shown only before approval, so the count is
+                locked once the buyer signs. Default 4 leaves the schedule and the
+                request unchanged. Segmented pill control (design TOKENS §3). */}
+            {!hasAllowance ? (
+              <div style={{ marginTop: 14 }}>
+                <Eyebrow>Installments</Eyebrow>
+                <div
+                  role="radiogroup"
+                  aria-label="Number of installments"
+                  style={{
+                    marginTop: 8,
+                    display: "inline-flex",
+                    gap: 4,
+                    padding: 4,
+                    background: "var(--paper-sunk)",
+                    borderRadius: 999,
+                  }}
+                >
+                  {[3, 4, 6].map((n) => {
+                    const active = installments === n;
+                    return (
+                      <button
+                        key={n}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        aria-label={`${n} installments`}
+                        onClick={() => setInstallments(n)}
+                        className={active ? "btn-amber" : undefined}
+                        style={{
+                          minWidth: 54,
+                          padding: "8px 18px",
+                          borderRadius: 999,
+                          border: "none",
+                          background: active ? undefined : "transparent",
+                          color: active ? undefined : "var(--ink-62)",
+                          fontSize: 14,
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {n}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+
+            <p style={{ marginTop: hasAllowance ? 8 : 14, fontSize: 13, color: "var(--ink-62)" }}>
               <span className="num">{formatAmount(TOTAL)}</span> total · every week · 0% interest
+              {hasRemainder ? " · final installment settles the remainder" : null}
             </p>
 
             <div style={{ marginTop: 16 }}>

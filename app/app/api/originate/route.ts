@@ -47,8 +47,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, reason: "bad_principal" }, { status: 400 });
   }
   if (principal <= 0n) return NextResponse.json({ ok: false, reason: "bad_principal" }, { status: 400 });
+  // Only 3, 4 or 6 are offered. Re-validate server-side; never trust the client.
   const installments = Number(body.installments ?? 4);
-  if (!Number.isInteger(installments) || installments < 1 || installments > 12) {
+  if (![3, 4, 6].includes(installments)) {
     return NextResponse.json({ ok: false, reason: "bad_installments" }, { status: 400 });
   }
 
