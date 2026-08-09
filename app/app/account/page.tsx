@@ -78,7 +78,7 @@ export default async function AccountPage() {
       >
         <NavItem href="/account" label="Plans" active />
         <NavItem href="/" label="Shop" />
-        <NavItem href="/merchant" label="Merchant" />
+        <NavItem href="/merchant" label="Kudira" />
       </nav>
     </main>
   );

@@ -57,7 +57,7 @@ export default async function MerchantDashboard() {
       </header>
 
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 20px 80px" }}>
-        <Eyebrow>Merchant dashboard</Eyebrow>
+        <Eyebrow>Kudira dashboard</Eyebrow>
         <h1
           style={{
             fontFamily: "var(--font-source-serif)",
@@ -195,6 +195,20 @@ export default async function MerchantDashboard() {
               settled via this pool {formatAmount(settledToYou)} KUSDC · wallet holds{" "}
               {formatAmount(received)}, which includes earlier rehearsal runs
             </div>
+            <p
+              style={{
+                marginTop: 14,
+                paddingTop: 12,
+                borderTop: "1px solid var(--ink-08)",
+                fontSize: 12.5,
+                lineHeight: 1.6,
+                color: "var(--ink-62)",
+              }}
+            >
+              A merchant&apos;s exposure ends at settlement. Plan progress is shown here for
+              demonstration. In production the merchant view is settlements only, and repayment
+              state belongs to the protocol operator.
+            </p>
           </Card>
         </div>
 
