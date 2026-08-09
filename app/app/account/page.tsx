@@ -19,10 +19,10 @@ export default async function AccountPage() {
   const history = mine.filter((p) => p.status !== 1);
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--paper)", paddingBottom: 110 }}>
+    <main style={{ minHeight: "100vh", background: "var(--canvas)", color: "var(--bone)", paddingBottom: 110 }}>
       {/* Top bar. Normal flow, so it scrolls away with the content. The grade
           badge lives in the Standing card below, not here, so it is shown once. */}
-      <header style={{ padding: "16px 20px" }}>
+      <header style={{ padding: "18px 20px" }}>
         <Logo />
       </header>
 
@@ -39,7 +39,7 @@ export default async function AccountPage() {
             marginTop: 4,
             fontSize: 11.5,
             lineHeight: 1.8,
-            color: "var(--ink-45)",
+            color: "var(--bone-42)",
           }}
           className="num"
         >
@@ -56,9 +56,8 @@ export default async function AccountPage() {
         </div>
       </div>
 
-      {/* Floating bottom nav. GLASS — one of exactly two permitted uses. */}
+      {/* Floating bottom nav. Solid on the black canvas — figures never sit on glass. */}
       <nav
-        className="glass"
         style={{
           position: "fixed",
           bottom: 0,
@@ -66,9 +65,9 @@ export default async function AccountPage() {
           right: 0,
           zIndex: 40,
           margin: "0 16px 16px",
-          borderRadius: "var(--r-card)",
-          border: "1px solid var(--ink-08)",
-          boxShadow: "var(--shadow-up)",
+          borderRadius: "var(--r-inner)",
+          background: "var(--raised)",
+          border: "1px solid var(--line-14)",
           padding: "12px 8px",
           display: "flex",
           justifyContent: "space-around",
@@ -89,9 +88,10 @@ function NavItem({ href, label, active }: { href: string; label: string; active?
     <Link
       href={href}
       style={{
+        fontFamily: "var(--font-jetbrains-mono), ui-monospace, monospace",
         fontSize: 12.5,
         fontWeight: active ? 600 : 500,
-        color: active ? "var(--ink)" : "var(--ink-55)",
+        color: active ? "var(--bone)" : "var(--bone-55)",
         padding: "4px 14px",
       }}
     >
