@@ -26,7 +26,7 @@ function Attribute({ children, color = "var(--bone-62)", shape }: { children: Re
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
       {dot}
-      <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.08em", color }}>{children}</span>
+      <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: "0.06em", color, whiteSpace: "nowrap" }}>{children}</span>
     </div>
   );
 }
@@ -94,7 +94,7 @@ export function CredentialCard({
           borderRadius: "var(--r-card)",
           border: "1px solid var(--line-09)",
           boxShadow: "var(--shadow-card)",
-          padding: 26,
+          padding: 22,
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -160,7 +160,7 @@ export function CredentialCard({
         </div>
 
         {/* Struck attributes along the bottom */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20, borderTop: "1px solid var(--line-08)", marginTop: 26, paddingTop: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 13, flexWrap: "nowrap", borderTop: "1px solid var(--line-08)", marginTop: 22, paddingTop: 14 }}>
           <Attribute shape="ring">BANK VERIFIED</Attribute>
           <Attribute shape="square">NON-TRANSFERABLE</Attribute>
           {revoked ? (
