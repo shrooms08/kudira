@@ -1,0 +1,166 @@
+<title>Kudira Indigo — Checkout</title>
+<style>
+  :root{
+    --canvas:#000; --raised:#141414; --raised-2:#1e1e1e; --accent:#c4f82a; --bone:#f5f5f0; --signal:#00d084;
+    --bone-75:rgba(245,245,240,.75); --bone-62:rgba(245,245,240,.62); --bone-55:rgba(245,245,240,.55);
+    --bone-50:rgba(245,245,240,.5); --bone-42:rgba(245,245,240,.42);
+    --line-14:rgba(245,245,240,.14); --line-09:rgba(245,245,240,.09); --line-08:rgba(245,245,240,.08);
+    --signal-14:rgba(0,208,132,.14);
+    --shadow-card:0 22px 44px -20px rgba(0,0,0,.9), inset 0 1px 0 rgba(245,245,240,.07), inset 0 -1px 0 rgba(0,0,0,.8);
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace; --serif:"Instrument Serif",Georgia,serif; --sans:system-ui,-apple-system,sans-serif;
+    --r-inner:18px; --r-card:28px; --r-pill:999px; --r-input:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0a0a0a;color:var(--bone);font-family:var(--sans);padding:40px 20px 80px;display:flex;flex-direction:column;align-items:center;gap:20px}
+  .cap{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--bone-50);text-align:center}
+  .note{font-family:var(--mono);font-size:10.5px;color:var(--bone-42);max-width:48ch;text-align:center;line-height:1.6}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-55)}
+
+  .phone{width:414px;max-width:100%;background:var(--canvas);border-radius:36px;border:1px solid var(--line-14);overflow:hidden;position:relative;box-shadow:0 40px 80px -30px rgba(0,0,0,.9)}
+  .scroll{height:860px;overflow:hidden;position:relative}
+  header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+  .back{font-family:var(--mono);font-size:13px;color:var(--bone-62)}
+  .brand{display:inline-flex;align-items:center;gap:7px}
+  .brand svg{width:15px;height:15px;display:block}
+  .brand span{font-family:var(--serif);font-size:16px}
+  .body{padding:8px 20px 20px;display:grid;gap:12px}
+  .card{background:var(--raised);border:1px solid var(--line-09);border-radius:var(--r-inner);padding:20px}
+  .h{font-family:var(--serif);font-size:26px;letter-spacing:-.01em;margin-top:8px}
+  .addr{font-family:var(--mono);font-size:13px;color:var(--bone-62);margin-top:10px}
+
+  /* credential card */
+  .ku-card-circles{background-color:var(--raised);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34'%3E%3Cg fill='none' stroke='%23262626' stroke-width='1'%3E%3Ccircle cx='17' cy='17' r='16'/%3E%3Ccircle cx='17' cy='17' r='10'/%3E%3Ccircle cx='17' cy='17' r='4.25'/%3E%3C/g%3E%3C/svg%3E");background-repeat:repeat}
+  .cc{position:relative;aspect-ratio:1.586/1;border-radius:var(--r-card);border:1px solid var(--line-09);box-shadow:var(--shadow-card);padding:22px;display:flex;flex-direction:column;overflow:hidden;margin-top:16px}
+  .cc .row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .cc .apass{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--bone-50)}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:var(--signal-14);border-radius:999px;padding:4px 10px 4px 7px;margin-top:5px}
+  .pill i{width:6px;height:6px;border-radius:50%;background:var(--signal)}
+  .pill span{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--signal)}
+  .ref{font-family:var(--mono);font-size:9px;color:var(--bone-50)}
+  .mark{width:26px;height:26px;display:block}
+  .cc .bottom{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  .cc .w{font-family:var(--mono);font-weight:700;font-size:54px;letter-spacing:-.04em;line-height:.9;font-variant-numeric:tabular-nums}
+  .cc .c{font-family:var(--mono);font-size:22px;color:var(--bone-50)}
+  .cc .ll{font-size:12px;color:var(--bone-62);margin-top:5px}
+  .cc .grade{font-family:var(--mono);font-weight:700;font-size:50px;line-height:.85;letter-spacing:-.03em;color:#2b2b2b;text-shadow:0 1.5px 0 rgba(245,245,240,.34),0 -1px 0 rgba(0,0,0,.92)}
+  .cc .st{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--bone-42)}
+  .cc .attrs{display:flex;align-items:center;gap:16px;border-top:1px solid var(--line-08);margin-top:18px;padding-top:12px}
+  .cc .attr{display:flex;align-items:center;gap:5px}
+  .cc .attr span{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--bone-62)}
+  .dot-ring{width:8px;height:8px;border-radius:50%;border:2px solid var(--bone-75)}
+  .dot-sq{width:7px;height:7px;background:var(--bone-75)}
+  .dot-sig{width:8px;height:8px;border-radius:50%;border:2px solid var(--signal)}
+  .attr.sig span{color:var(--signal)}
+
+  .drow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:10px;border-bottom:1px solid var(--line-08)}
+  .drow .l{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-55)}
+  .drow .v{font-size:13.5px}
+  .priv{margin-top:14px;font-size:12.5px;color:var(--bone-55);line-height:1.6}
+
+  .pay-hero{display:flex;align-items:baseline;gap:8px;margin-top:12px}
+  .pay-hero .a{font-family:var(--mono);font-weight:700;font-size:34px;letter-spacing:-.04em;line-height:.9}
+  .pay-hero .c{font-family:var(--mono);font-size:18px;color:var(--bone-50)}
+  .pay-hero .x{font-family:var(--mono);font-size:15px;color:var(--bone-62)}
+  .seg{margin-top:8px;display:inline-flex;gap:4px;padding:4px;background:var(--raised-2);border-radius:999px}
+  .seg button{min-width:54px;padding:8px 18px;border-radius:999px;border:none;background:transparent;color:var(--bone-62);font-family:var(--mono);font-size:14px}
+  .seg button.on{background:var(--accent);color:#0a0a0a}
+  .tl{margin-top:14px;font-size:13px;color:var(--bone-62)}
+  .auth{margin-top:16px}
+  .authp{margin-top:8px;font-size:12.5px;color:var(--bone-62);line-height:1.6}
+  .btn{background:var(--accent);color:#0a0a0a;border-radius:var(--r-pill);font-family:var(--mono);font-weight:500;padding:14px 24px;font-size:15px;width:100%;text-align:center;margin-top:12px}
+
+  .paybar{position:absolute;bottom:0;left:0;right:0;background:var(--raised);border-top:1px solid var(--line-14);padding:14px 20px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .paybar .s{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--bone-62)}
+  .paybar .g{font-family:var(--mono);font-size:13px;color:var(--bone-62)}
+</style>
+
+<div class="cap">KUDIRA · INDIGO · CHECKOUT — CONNECTED &amp; ELIGIBLE</div>
+
+<div class="phone">
+  <div class="scroll">
+    <header>
+      <div class="back">‹ BACK</div>
+      <div class="brand"><svg viewBox="0 0 512 512"><path fill-rule="evenodd" fill="var(--accent)" d="M150 72 H362 A78 78 0 0 1 440 150 V362 A78 78 0 0 1 362 440 H150 A78 78 0 0 1 72 362 V150 A78 78 0 0 1 150 72 Z M144 130 H196 V382 H144 Z M262.8 240.9 L372.7 148.7 L349.7 121.1 L239.8 213.3 Z M239.8 298.7 L349.7 390.9 L372.7 363.3 L262.8 271.1 Z"/></svg><span>Kudira</span></div>
+      <span style="width:40px"></span>
+    </header>
+
+    <div class="body">
+      <div class="card">
+        <div class="eyebrow">Step 1 of 3</div>
+        <div class="h">Wallet connected</div>
+        <div class="addr num">0xbBa8dD…928bCA</div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Step 2 of 3 · A-Pass read · validator compliance</div>
+        <div class="cc ku-card-circles">
+          <div class="row">
+            <div>
+              <div class="apass">A-PASS</div>
+              <div class="pill"><i></i><span>VERIFIED</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <div class="ref">CV·2096</div>
+              <svg class="mark" viewBox="0 0 512 512"><path fill-rule="evenodd" fill="var(--accent)" d="M150 72 H362 A78 78 0 0 1 440 150 V362 A78 78 0 0 1 362 440 H150 A78 78 0 0 1 72 362 V150 A78 78 0 0 1 150 72 Z M144 130 H196 V382 H144 Z M262.8 240.9 L372.7 148.7 L349.7 121.1 L239.8 213.3 Z M239.8 298.7 L349.7 390.9 L372.7 363.3 L262.8 271.1 Z"/></svg>
+            </div>
+          </div>
+          <div class="bottom">
+            <div>
+              <div style="display:flex;align-items:baseline;gap:3px"><span class="w" id="cnt">0</span><span class="c">.00</span></div>
+              <div class="ll">Approved limit · KUSDC</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+              <div class="grade">B+</div>
+              <div class="st">SUBTIER 50</div>
+            </div>
+          </div>
+          <div class="attrs">
+            <div class="attr"><span class="dot-ring"></span><span>BANK VERIFIED</span></div>
+            <div class="attr"><span class="dot-sq"></span><span>NON-TRANSFERABLE</span></div>
+            <div class="attr sig"><span class="dot-sig"></span><span>NOT REVOKED</span></div>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:grid;gap:10px">
+          <div class="drow"><span class="l">Tier</span><span class="v num">50</span></div>
+          <div class="drow"><span class="l">Satisfies pool rule</span><span class="v num" style="color:var(--signal)">true</span></div>
+        </div>
+        <p class="priv">Kudira read tier, standing and limit. No name, document or account number.</p>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Step 3 of 3 · Your payment</div>
+        <div class="pay-hero"><span class="a">32</span><span class="c">.50</span><span style="color:var(--bone-50);font-size:18px">KUSDC</span><span class="x">× 4</span></div>
+        <div style="margin-top:14px"><div class="eyebrow">Installments</div>
+          <div class="seg"><button>3</button><button class="on">4</button><button>6</button></div>
+        </div>
+        <p class="tl"><span class="num">130.00</span> total · every week · 0% interest</p>
+        <div class="auth">
+          <div class="eyebrow">Authorise auto-debit</div>
+          <p class="authp">You approve the pool once, now. Each installment is then pulled on its due date. You sign this yourself — Kudira cannot move funds you have not approved.</p>
+          <div class="btn">Approve 130.00 KUSDC</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="paybar">
+      <div class="s">APPROVE TO AUTHORISE AUTO-DEBIT</div>
+      <div class="g">B+ · Account →</div>
+    </div>
+  </div>
+</div>
+
+<div class="note">Type in system fallbacks; in-app JetBrains Mono / Instrument Serif / Archivo. Every value binds to real reads — the limit counts up 0→500 on the credential reveal (motion a). Unseeded wallets show the same card as “Not yet rated · Limit on approval”.</div>
+
+<script>
+  (function () {
+    var el = document.getElementById("cnt");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = "500"; return; }
+    function bez(x1,y1,x2,y2){var cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+      function fx(t){return((ax*t+bx)*t+cx)*t}function dfx(t){return(3*ax*t+2*bx)*t+cx}function fy(t){return((ay*t+by)*t+cy)*t}
+      return function(x){var t=x;for(var i=0;i<5;i++){var e=fx(t)-x;if(Math.abs(e)<1e-4)break;var d=dfx(t);if(Math.abs(d)<1e-6)break;t-=e/d}return fy(t)}}
+    var ease=bez(0.16,1,0.3,1), to=500, t0=0;
+    function step(t){ if(!t0)t0=t; var p=Math.min(1,(t-t0)/600); el.textContent=Math.round(ease(p)*to).toLocaleString("en-US"); if(p<1)requestAnimationFrame(step); }
+    setTimeout(function(){ requestAnimationFrame(step); }, 250);
+  })();
+</script>
