@@ -94,6 +94,22 @@ export const poolAbi = [
   { type: "function", name: "liquidity", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
   { type: "function", name: "satisfiesRule", stateMutability: "view", inputs: [{ name: "tier", type: "uint8" }, { name: "subTier", type: "uint8" }], outputs: [{ type: "bool" }] },
   { type: "function", name: "collect", stateMutability: "nonpayable", inputs: [{ name: "planId", type: "uint256" }], outputs: [{ type: "uint256" }] },
+  {
+    type: "function",
+    name: "originate",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "borrower", type: "address" },
+      { name: "merchant", type: "address" },
+      { name: "principal", type: "uint256" },
+      { name: "installments", type: "uint16" },
+      { name: "dueEvery", type: "uint64" },
+      { name: "apassTier", type: "uint8" },
+      { name: "apassSubTier", type: "uint8" },
+      { name: "apassExpiry", type: "uint64" },
+    ],
+    outputs: [{ name: "planId", type: "uint256" }],
+  },
 ] as const;
 
 export const registryAbi = [
