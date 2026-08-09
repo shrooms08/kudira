@@ -1,4 +1,4 @@
-<title>Kudira Indigo — Credential card &amp; weave</title>
+<title>Kudira Indigo — Credential card</title>
 <style>
   :root {
     --canvas:#000000; --raised:#141414; --raised-2:#1e1e1e;
@@ -8,11 +8,9 @@
     --line-09:rgba(245,245,240,.09); --line-08:rgba(245,245,240,.08); --line-14:rgba(245,245,240,.14);
     --signal-14:rgba(0,208,132,.14);
     --shadow-card:0 26px 54px -22px rgba(0,0,0,.9), inset 0 1px 0 rgba(245,245,240,.07), inset 0 -1px 0 rgba(0,0,0,.8);
-    --deboss:0 1px 0 rgba(245,245,240,.16), 0 -1px 0 rgba(0,0,0,.95);
     --mono: ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
     --serif: "Instrument Serif",Georgia,"Times New Roman",serif;
     --sans: system-ui,-apple-system,"Segoe UI",sans-serif;
-    --ease: cubic-bezier(0.16,1,0.3,1);
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { background:var(--canvas); color:var(--bone); font-family:var(--sans); padding:48px 40px 96px; }
@@ -28,19 +26,17 @@
   section { display:flex; flex-direction:column; gap:20px; }
   .sec-head { display:flex; align-items:baseline; gap:16px; }
   .sec-title { font-family:var(--serif); font-size:30px; letter-spacing:-.01em; }
-  .num { font-family:var(--mono); font-variant-numeric:tabular-nums; }
 
-  /* THE WEAVE — 9px plain over-under. Colours %23-encoded. */
-  .ku-weave {
+  /* THE CARD FIELD — concentric circles, 34px tile, stroke %23262626. */
+  .ku-card-circles {
     background-color:var(--raised);
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Crect width='9' height='9' fill='%230E0E0E'/%3E%3Crect x='0' y='0' width='4' height='4' fill='%23161616'/%3E%3Crect x='5' y='5' width='4' height='4' fill='%23161616'/%3E%3Crect x='5' y='0' width='4' height='4' fill='%23151515'/%3E%3Crect x='0' y='5' width='4' height='4' fill='%23151515'/%3E%3Crect x='0' y='0' width='4' height='1' fill='%231F1F1F'/%3E%3Crect x='5' y='5' width='4' height='1' fill='%231F1F1F'/%3E%3Crect x='5' y='0' width='1' height='4' fill='%231C1C1C'/%3E%3Crect x='0' y='5' width='1' height='4' fill='%231C1C1C'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34'%3E%3Cg fill='none' stroke='%23262626' stroke-width='1'%3E%3Ccircle cx='17' cy='17' r='16'/%3E%3Ccircle cx='17' cy='17' r='10'/%3E%3Ccircle cx='17' cy='17' r='4.25'/%3E%3C/g%3E%3C/svg%3E");
     background-repeat:repeat;
   }
   .swatches { display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
   .swatch-label { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--bone-50); margin-top:8px; }
-  .w512 { width:512px; height:322px; border-radius:12px; border:1px solid var(--line-09); }
+  .w512 { width:512px; max-width:100%; height:322px; border-radius:12px; border:1px solid var(--line-09); }
   .wcard { width:520px; max-width:100%; aspect-ratio:1.586/1; border-radius:28px; border:1px solid var(--line-09); }
-  .wzoom { width:144px; height:144px; border-radius:12px; border:1px solid var(--line-09); image-rendering:pixelated; background-size:72px 72px; }
 
   /* THE CARD — mirrors CredentialCard.tsx */
   .cards { display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; }
@@ -58,8 +54,11 @@
   .limit .cents { font-family:var(--mono); font-weight:500; font-size:28px; color:var(--bone-50); font-variant-numeric:tabular-nums; }
   .limlabel { font-size:13px; color:var(--bone-62); margin-top:6px; }
   .gradebox { display:flex; flex-direction:column; align-items:flex-end; gap:3px; }
-  .grade { font-family:var(--mono); font-weight:700; font-size:62px; line-height:.85; letter-spacing:-.03em; color:#181818; text-shadow:var(--deboss); font-variant-numeric:tabular-nums; }
-  .unrated { font-family:var(--serif); font-size:30px; line-height:1; color:var(--bone-55); text-align:right; }
+  /* Debossed grade — lifted fill + stronger lower light edge, legible at a glance. */
+  .grade { font-family:var(--mono); font-weight:700; font-size:62px; line-height:.85; letter-spacing:-.03em;
+    color:#2b2b2b; text-shadow:0 1.5px 0 rgba(245,245,240,.34), 0 -1px 0 rgba(0,0,0,.92); font-variant-numeric:tabular-nums; }
+  /* Not-yet-rated — a status, not a headline: mono, ~60% bone. */
+  .unrated { font-family:var(--mono); font-size:15px; line-height:1; color:var(--bone-62); text-align:right; letter-spacing:.01em; }
   .subtier { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--bone-42); }
   .attrs { display:flex; align-items:center; gap:20px; border-top:1px solid var(--line-08); margin-top:26px; padding-top:16px; }
   .attr { display:flex; align-items:center; gap:6px; }
@@ -69,34 +68,29 @@
   .dot-signal { width:9px; height:9px; border-radius:50%; border:2px solid var(--signal); }
   .attr.sig span { color:var(--signal); }
   .cardnote { font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--bone-42); margin-top:10px; }
-
   .mark { width:30px; height:30px; display:block; flex:none; opacity:.9; }
 </style>
 
 <div class="wrap">
   <header>
-    <div class="kicker">KUDIRA · INDIGO · CREDENTIAL &amp; WEAVE</div>
+    <div class="kicker">KUDIRA · INDIGO · CREDENTIAL</div>
     <h1>The card on its own</h1>
-    <div class="sub">The weave rendered at 512px and at actual card width, then the credential in both states — rated, and the unseeded case that must read as “Not yet rated”, never a borrowed Delinquent band.</div>
-    <div class="note">Type shown in system fallbacks (mono / serif / sans). In-app the real faces are JetBrains Mono, Instrument Serif and Archivo, self-hosted via next/font. The weave and layout are exact.</div>
+    <div class="sub">Revised: stamped 34px circle field (the weave was dropped), a legible debossed grade, and an unseeded card that reads clearly apart from the rated one.</div>
+    <div class="note">Type shown in system fallbacks (mono / serif / sans). In-app the real faces are JetBrains Mono, Instrument Serif and Archivo, self-hosted via next/font. The field and layout are exact.</div>
   </header>
 
-  <!-- THE WEAVE -->
+  <!-- THE FIELD -->
   <section>
-    <div class="sec-head"><div class="eyebrow">00 · THE SURFACE</div><div class="sec-title">The 9px weave</div></div>
-    <div class="sub">It has to read as cloth, not a dark rectangle — and hold at both scales. Densest surface in the product (next densest motif is 12px).</div>
+    <div class="sec-head"><div class="eyebrow">00 · THE SURFACE</div><div class="sec-title">The card field · 34px circles</div></div>
+    <div class="sub">Concentric circles at a 34px tile — stamped adire, dense enough to read as cloth-stamp, small enough to recede behind the grade and limit rather than ring them.</div>
     <div class="swatches">
       <div>
-        <div class="ku-weave w512"></div>
+        <div class="ku-card-circles w512"></div>
         <div class="swatch-label">TILED AT 512 × 322 (CARD RATIO)</div>
       </div>
       <div>
-        <div class="ku-weave wcard"></div>
+        <div class="ku-card-circles wcard"></div>
         <div class="swatch-label">AT ACTUAL CARD WIDTH (520)</div>
-      </div>
-      <div>
-        <div class="ku-weave wzoom"></div>
-        <div class="swatch-label">8× ZOOM — TILE STRUCTURE</div>
       </div>
     </div>
   </section>
@@ -107,7 +101,7 @@
     <div class="cards">
       <!-- Rated -->
       <div>
-        <div class="card ku-weave">
+        <div class="card ku-card-circles">
           <div class="row">
             <div>
               <div class="apass">A-PASS</div>
@@ -139,7 +133,7 @@
 
       <!-- Unseeded -->
       <div>
-        <div class="card ku-weave">
+        <div class="card ku-card-circles">
           <div class="row">
             <div>
               <div class="apass">A-PASS</div>
@@ -153,7 +147,7 @@
           <div class="bottom">
             <div>
               <div class="limit"><span class="whole">500</span><span class="cents">.00</span></div>
-              <div class="limlabel">Approved limit · KUSDC</div>
+              <div class="limlabel">Limit on approval · KUSDC</div>
             </div>
             <div class="gradebox">
               <div class="unrated">Not yet rated</div>
@@ -166,7 +160,7 @@
             <div class="attr sig"><span class="dot-signal"></span><span>NOT REVOKED</span></div>
           </div>
         </div>
-        <div class="cardnote">UNSEEDED · no on-chain line yet · limit = subTier × 10 entitlement, band never “Delinquent”</div>
+        <div class="cardnote">UNSEEDED · no on-chain line yet · “Limit on approval”, status in mono, never Delinquent</div>
       </div>
     </div>
     <div class="note">Sample values shown; in-app every figure binds to real chain + A-Pass reads (limit, band, subTier, verified, cvRecordId).</div>
@@ -176,13 +170,12 @@
 <script>
   // Motion (a): approved-limit count-up, 0 -> value over 600ms on cubic-bezier(0.16,1,0.3,1).
   (function () {
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.getElementById("cnt").textContent = "500"; return;
-    }
+    var el = document.getElementById("cnt");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = "500"; return; }
     function bez(x1,y1,x2,y2){var cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
       function fx(t){return((ax*t+bx)*t+cx)*t}function dfx(t){return(3*ax*t+2*bx)*t+cx}function fy(t){return((ay*t+by)*t+cy)*t}
       return function(x){var t=x;for(var i=0;i<5;i++){var e=fx(t)-x;if(Math.abs(e)<1e-4)break;var d=dfx(t);if(Math.abs(d)<1e-6)break;t-=e/d}return fy(t)}}
-    var ease=bez(0.16,1,0.3,1), el=document.getElementById("cnt"), to=500, t0=0;
+    var ease=bez(0.16,1,0.3,1), to=500, t0=0;
     function step(t){ if(!t0)t0=t; var p=Math.min(1,(t-t0)/600); el.textContent=Math.round(ease(p)*to).toLocaleString("en-US"); if(p<1)requestAnimationFrame(step); }
     requestAnimationFrame(step);
   })();

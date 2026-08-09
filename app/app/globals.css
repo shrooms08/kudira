@@ -95,10 +95,11 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
-/* The grade struck into a surface. */
+/* The grade struck into a surface. Lifted fill + stronger lower light edge so it
+   reads at a glance while staying debossed — it is the card's second figure. */
 .deboss {
-  color: #181818;
-  text-shadow: var(--deboss);
+  color: #2b2b2b;
+  text-shadow: 0 1.5px 0 rgba(245, 245, 240, 0.34), 0 -1px 0 rgba(0, 0, 0, 0.92);
 }
 
 /* --- Adire motifs. Colours %23-encoded or the pattern renders invisible. --- */
@@ -120,12 +121,13 @@ a {
   background-repeat: repeat;
 }
 
-/* THE WEAVE — 9px plain over-under, the densest surface in the product.
-   A narrow value band around the #141414 face: valleys #0E0E0E, thread bodies
-   #15/#16, lit edges #1F/#1C. Reads as cloth at card size, not noise at 512px. */
-.ku-weave {
+/* THE CARD FIELD — concentric circles at a 34px tile, stroke %23262626. Dense
+   enough to read as stamped adire, small enough to stop fighting the grade and
+   limit. This is the credential face (the weave stand-in was dropped: the
+   circles read as stamped, the crosshatch read as generic fabric). */
+.ku-card-circles {
   background-color: var(--raised);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Crect width='9' height='9' fill='%230E0E0E'/%3E%3Crect x='0' y='0' width='4' height='4' fill='%23161616'/%3E%3Crect x='5' y='5' width='4' height='4' fill='%23161616'/%3E%3Crect x='5' y='0' width='4' height='4' fill='%23151515'/%3E%3Crect x='0' y='5' width='4' height='4' fill='%23151515'/%3E%3Crect x='0' y='0' width='4' height='1' fill='%231F1F1F'/%3E%3Crect x='5' y='5' width='4' height='1' fill='%231F1F1F'/%3E%3Crect x='5' y='0' width='1' height='4' fill='%231C1C1C'/%3E%3Crect x='0' y='5' width='1' height='4' fill='%231C1C1C'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34'%3E%3Cg fill='none' stroke='%23262626' stroke-width='1'%3E%3Ccircle cx='17' cy='17' r='16'/%3E%3Ccircle cx='17' cy='17' r='10'/%3E%3Ccircle cx='17' cy='17' r='4.25'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
 }
 

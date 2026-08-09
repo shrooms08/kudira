@@ -25,7 +25,7 @@ Redesign lives on the `redesign` branch only. Master is the shipped Amber build.
 `.55` labels, `.5` muted, `.42` faintest. Hairlines: `.14` default divider on dark,
 `.09` card border, `.28` outline chips. Plus black insets `rgba(0,0,0,.8–.95)`.
 
-The debossed grade is `color:#181818` with `text-shadow:0 1px 0 rgba(245,245,240,.16), 0 -1px 0 rgba(0,0,0,.95)` — light lower edge, black upper edge, struck into the face.
+The debossed grade is `color:#2b2b2b` with `text-shadow:0 1.5px 0 rgba(245,245,240,.34), 0 -1px 0 rgba(0,0,0,.92)` — lifted fill and a stronger lower light edge so it reads at a glance while staying struck into the face. It is the card's second figure after the limit; do not recess it further.
 
 ## 2. Type — three families
 
@@ -46,17 +46,14 @@ invisible. Verbatim from source (all `background-repeat:repeat`):
 - `.ku-m-stripes` — 20×20, `stroke='%23262626'`, broken horizontal rules.
 - `.ku-m-circles` — 34×34, `stroke='%23262626'`, three concentric circles.
 - `.ku-stamp` — 12×12, `fill='%23A5D423'`, two lime specks.
-- `.ku-card-circles` — 34×34, `stroke='%231E1E1E'` (the softer card variant).
+### The card field — 34px concentric circles (the weave was dropped)
 
-### The 9px weave — the densest surface, and the point of the card
-
-The credential must read as **cloth, not a dark rectangle**. The weave is a 9px
-tile, denser than any other motif (next densest is the 12px stamp). It is a
-plain over-under weave in a narrow value band around the `#141414` face: deep
-valleys `#0E0E0E`, thread bodies `#161616`, lit thread edges `#1F1F1F`. Subtle
-enough to be cloth at card size, not noise at 512px. Class `.ku-weave` in globals.
-**Render it standalone at 512px and at actual card width before wiring anything** —
-a weave that works at one scale often reads as noise at the other.
+The credential face is `.ku-card-circles`: concentric circles at a **34px tile**,
+`stroke='%23262626'`, on the `#141414` face. The 9px crosshatch weave was tried
+and **dropped** — it read as generic fabric texture; the circles read as *stamped
+adire*. The 34px scale matters: larger (≈90px) and a ring sits behind the grade
+and fights the typography; at 34px the circles read as a dense stamped field and
+recede behind the content. **Card motif = 34px circles. There is no weave.**
 
 ## 4. Motion — exactly three places, all `cubic-bezier(0.16,1,0.3,1)`
 
@@ -70,7 +67,7 @@ Nothing else moves.
 
 - `aspect-ratio: 1.586 / 1` (ISO/IEC 7810 ID-1), bg `--raised`, radius 28px,
   border `rgba(245,245,240,.09)`, deep drop shadow + inset highlight/shadow (deboss).
-- 9px weave on the face.
+- 34px concentric-circle field on the face (`.ku-card-circles`).
 - Top-left: `A-PASS` label + a VERIFIED signal pill (green dot + text).
 - Top-right: issuer reference (real: A-Pass `cvRecordId`) + the Kudira lime mark.
 - Bottom-left: approved-limit figure (Mono 700, ~66px, tabular) with an eased-in

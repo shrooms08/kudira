@@ -76,7 +76,7 @@ export function CredentialCard({
   return (
     <div style={{ width, maxWidth: "100%", flex: "none" }}>
       <div
-        className="ku-weave"
+        className="ku-card-circles"
         style={{
           position: "relative",
           aspectRatio: "1.586 / 1",
@@ -128,7 +128,9 @@ export function CredentialCard({
               </div>
               <div style={{ fontFamily: mono, fontWeight: 500, fontSize: 28, color: "var(--bone-50)", fontVariantNumeric: "tabular-nums" }}>.{cents}</div>
             </div>
-            <div style={{ fontSize: 13, color: "var(--bone-62)" }}>Approved limit · KUSDC</div>
+            <div style={{ fontSize: 13, color: "var(--bone-62)" }}>
+              {rated ? "Approved limit · KUSDC" : "Limit on approval · KUSDC"}
+            </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3, flex: "none" }}>
             {rated ? (
@@ -136,7 +138,7 @@ export function CredentialCard({
                 {formatGrade(band)}
               </div>
             ) : (
-              <div style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif", fontSize: 30, lineHeight: 1, color: "var(--bone-55)", textAlign: "right" }}>
+              <div style={{ fontFamily: mono, fontSize: 15, lineHeight: 1, color: "var(--bone-62)", textAlign: "right", letterSpacing: "0.01em" }}>
                 Not yet rated
               </div>
             )}
