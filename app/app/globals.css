@@ -131,6 +131,15 @@ a {
   background-repeat: repeat;
 }
 
+/* A content surface. Raised on the black canvas, hairline bordered. The
+   credential card is its own object (28px, deeper shadow) — this is everything
+   else. */
+.card {
+  background: var(--raised);
+  border: 1px solid var(--line-09);
+  border-radius: var(--r-inner);
+}
+
 /* --- Controls ------------------------------------------------------------- */
 
 .btn-accent {
