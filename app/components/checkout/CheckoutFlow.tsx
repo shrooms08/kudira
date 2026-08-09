@@ -15,9 +15,8 @@ import { Amount, Card, Eyebrow, GradeBadge, Logo } from "@/components/brand/Prim
 import { ADDRESSES, CHAIN_ID, creditLineAbi, erc20Abi } from "@/lib/contracts";
 import { explorerTx, formatAmount, formatGrade, shortAddress } from "@/lib/format";
 
-const TOTAL = 130_000_000n;
 const INSTALLMENTS = 4;
-const PER = TOTAL / BigInt(INSTALLMENTS);
+const DEFAULT_TOTAL = 130_000_000n;
 
 type ApassRead = {
   address: string;
@@ -39,7 +38,12 @@ type ApassRead = {
   disagreement: string | null;
 };
 
-export function CheckoutFlow() {
+export function CheckoutFlow({ amount }: { amount?: bigint }) {
+  // The bag total from the storefront, floored at 0. Falls back to the demo
+  // default when the checkout is opened directly without a cart.
+  const TOTAL = amount && amount > 0n ? amount : DEFAULT_TOTAL;
+  const PER = TOTAL / BigInt(INSTALLMENTS);
+
   const { address, isConnected, chainId } = useAccount();
   const { connect, connectors, isPending: connecting } = useConnect();
   const { switchChain, isPending: switching, error: switchError } = useSwitchChain();
