@@ -110,6 +110,15 @@ export const poolAbi = [
     ],
     outputs: [{ name: "planId", type: "uint256" }],
   },
+  // Custom errors, so a simulated originate revert decodes to a named reason.
+  { type: "error", name: "ZeroAddress", inputs: [] },
+  { type: "error", name: "ZeroAmount", inputs: [] },
+  { type: "error", name: "MerchantNotActive", inputs: [{ name: "merchant", type: "address" }] },
+  { type: "error", name: "ApassRuleNotSatisfied", inputs: [{ name: "tier", type: "uint8" }, { name: "subTier", type: "uint8" }, { name: "minTier", type: "uint8" }, { name: "minSubTier", type: "uint8" }] },
+  { type: "error", name: "BorrowerDelinquent", inputs: [{ name: "borrower", type: "address" }, { name: "grade", type: "uint8" }] },
+  { type: "error", name: "ExceedsCreditLimit", inputs: [{ name: "principal", type: "uint256" }, { name: "available", type: "uint256" }] },
+  { type: "error", name: "InsufficientLiquidity", inputs: [{ name: "requested", type: "uint256" }, { name: "available", type: "uint256" }] },
+  { type: "error", name: "NotOperator", inputs: [{ name: "caller", type: "address" }] },
 ] as const;
 
 export const registryAbi = [
