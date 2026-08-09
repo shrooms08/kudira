@@ -73,6 +73,17 @@ export function CredentialCard({
   const [whole, cents] = formatAmount(limit).split(".");
   const wholeInt = Number(whole.replace(/,/g, ""));
 
+  // The VERIFIED pill's green is an APPROVED signal, so it only fires once the
+  // account is rated. On the unseeded card it drops to neutral bone — the
+  // credential's verification is still carried by BANK VERIFIED along the bottom
+  // edge, so nothing is lost and green never reads as "approved" next to
+  // "Not yet rated".
+  const green = rated && verified;
+  const warn = rated && !verified;
+  const pillBg = green ? "var(--signal-14)" : warn ? "var(--warn-14)" : "rgba(245,245,240,0.06)";
+  const pillFg = green ? "var(--signal)" : warn ? "var(--warn)" : "var(--bone-62)";
+  const pillDot = green ? "var(--signal)" : warn ? "var(--warn)" : "var(--bone-55)";
+
   return (
     <div style={{ width, maxWidth: "100%", flex: "none" }}>
       <div
@@ -100,14 +111,14 @@ export function CredentialCard({
                 alignSelf: "flex-start",
                 alignItems: "center",
                 gap: 7,
-                background: verified ? "var(--signal-14)" : "var(--warn-14)",
+                background: pillBg,
                 borderRadius: "var(--r-pill)",
                 padding: "5px 11px 5px 8px",
               }}
             >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: verified ? "var(--signal)" : "var(--warn)", flex: "none" }} />
-              <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.1em", color: verified ? "var(--signal)" : "var(--warn)" }}>
-                {verified ? "VERIFIED" : "UNVERIFIED"}
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: pillDot, flex: "none" }} />
+              <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.1em", color: pillFg }}>
+                {warn ? "UNVERIFIED" : "VERIFIED"}
               </span>
             </div>
           </div>

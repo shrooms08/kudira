@@ -47,6 +47,10 @@
   .pill { display:inline-flex; align-self:flex-start; align-items:center; gap:7px; background:var(--signal-14); border-radius:999px; padding:5px 11px 5px 8px; margin-top:5px; }
   .pill i { width:6px; height:6px; border-radius:50%; background:var(--signal); }
   .pill span { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--signal); }
+  /* Unseeded: pill drops to neutral bone — green would read as approved next to "Not yet rated". */
+  .pill.neutral { background:rgba(245,245,240,.06); }
+  .pill.neutral i { background:var(--bone-55); }
+  .pill.neutral span { color:var(--bone-62); }
   .ref { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--bone-50); text-align:right; }
   .bottom { margin-top:auto; display:flex; align-items:flex-end; justify-content:space-between; gap:14px; }
   .limit { display:flex; align-items:baseline; gap:4px; }
@@ -137,7 +141,7 @@
           <div class="row">
             <div>
               <div class="apass">A-PASS</div>
-              <div class="pill"><i></i><span>VERIFIED</span></div>
+              <div class="pill neutral"><i></i><span>VERIFIED</span></div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <div class="ref">CV·2096</div>
