@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kudira - One-Page Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161F; --amber:#E9A13B; --amber-deep:#B87516;
+    --paper:#FAF8F5; --sunk:#F1EEE9;
+    --ink68:rgba(20,22,31,.72); --ink45:rgba(20,22,31,.5); --hair:rgba(20,22,31,.1);
+    --serif:'Source Serif 4',Georgia,serif;
+    --sans:'IBM Plex Sans',-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#8a8a8a;font-family:var(--sans);font-size:9.1px;line-height:1.5;color:var(--ink)}
+
+  .page{
+    width:210mm;min-height:297mm;margin:0 auto;background:#fff;
+    padding:13mm 14mm;display:flex;flex-direction:column;
+  }
+
+  header{border-bottom:2px solid var(--ink);padding-bottom:7px;margin-bottom:11px}
+  .brandrow{display:flex;align-items:baseline;justify-content:space-between}
+  h1{font-family:var(--serif);font-size:25px;font-weight:600;letter-spacing:-.01em}
+  .track{font-size:8.4px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--amber-deep)}
+  .tag{font-family:var(--serif);font-size:12.5px;color:var(--ink68);margin-top:2px}
+  .links{margin-top:7px;font-family:var(--mono);font-size:8.1px;color:var(--ink68);display:flex;gap:16px;flex-wrap:wrap}
+  .links b{color:var(--ink);font-weight:500}
+
+  h2{
+    font-size:8.4px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--amber-deep);margin:11px 0 5px;
+  }
+  h2:first-of-type{margin-top:0}
+  p{margin-bottom:5px}
+  .lead{font-family:var(--serif);font-size:11px;line-height:1.45}
+  strong{font-weight:600}
+  code{font-family:var(--mono);font-size:8.2px;background:var(--sunk);padding:.5px 3px;border-radius:2px}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+
+  .block{margin-bottom:6px}
+  .block b{display:block;font-family:var(--serif);font-size:10.5px;font-weight:600;margin-bottom:2px}
+
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:8.1px;margin-top:3px}
+  td{padding:2.6px 0;border-bottom:1px solid var(--hair)}
+  td:first-child{color:var(--ink68);width:112px;font-family:var(--sans);font-size:8.6px}
+  tr:last-child td{border-bottom:none}
+
+  .callout{
+    background:var(--paper);border-left:2.5px solid var(--amber);
+    padding:7px 10px;margin:7px 0;
+  }
+  .callout b{font-weight:600}
+
+  .close{
+    margin-top:auto;padding-top:9px;border-top:1px solid var(--hair);
+    font-family:var(--serif);font-size:10.5px;font-style:italic;color:var(--ink68);
+  }
+
+  @page{size:A4;margin:0}
+  @media print{
+    body{background:none}
+    .page{margin:0;box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brandrow">
+      <h1>Kudira</h1>
+      <div class="track">DeFi track &nbsp;·&nbsp; Base Sepolia</div>
+    </div>
+    <div class="tag">Buy now, pay later, underwritten by verified identity instead of collateral.</div>
+    <div class="links">
+      <span><b>Live</b> kudira-fi.vercel.app</span>
+      <span><b>Repo</b> github.com/shrooms08/kudira</span>
+      <span><b>Demo</b> youtu.be/XS926c6qZ8g</span>
+    </div>
+  </header>
+
+  <h2>Problem</h2>
+  <p class="lead">Buy now, pay later works because the lender knows who you are. Miss a payment and it follows you. On an anonymous chain nothing follows you, so a defaulter opens a new wallet and starts again.</p>
+  <p>That is why on-chain lending converged on overcollateralization: deposit 150 to borrow 100. It is not a design preference, it is what is left when you cannot identify a borrower. A loan secured by more than the loan is worth is a pawnshop, not credit. If you already had the 150, you would not need the loan. BNPL is the one consumer credit primitive that cannot exist without identity: the buyer receives goods before paying, and the only thing securing the loan is an identity they cannot discard.</p>
+
+  <h2>Solution</h2>
+  <p>A buyer checks out. Kudira reads their Cleanverse credential and gets back a tier, a standing and an expiry, never a name, a document or an account number. That standing is the credit limit. The merchant is paid in full <strong>in the same transaction as origination</strong>, so they carry no credit risk and wait for nothing. The buyer approves once and each installment is auto-debited on its due date.</p>
+  <p>The grade is the A-Pass <code>subTier</code>, an integer 0 to 99 held on-chain. <strong>Limit = subTier × 10.</strong> An on-time installment is +5, a default is −20, both saturating. Below 10 no new plans originate. No plan may extend past the credential's expiry.</p>
+  <div class="callout">
+    <b>A default lowers Kudira's own grade. It does not freeze the credential.</b> Freezing would lock the borrower out of every service on the Cleanverse network including the ability to repay us. A lender that blocks repayment has mispriced its own incentives. Recovery is reputational rather than collateral-based: the record follows the person, not the wallet, and is visible to every protocol reading the same A-Pass.
+  </div>
+
+  <h2>CVI · CVA integration points</h2>
+  <p style="color:var(--ink68);margin-bottom:6px">Every claim below is a public read on Base Sepolia.</p>
+
+  <div class="cols">
+    <div>
+      <div class="block">
+        <b>CVI, the underwriting input</b>
+        <code>query_apass</code> returns tier, subTier, standing and expiry. The credential determines the limit and the schedule. Repayment behaviour is written back to subTier via <code>generate_apass</code> with <code>override</code>, so the grade travels with the person rather than living privately in our database. Proven on-chain: 50 → 55 → 60 → 65 → 70 across four collected installments.
+      </div>
+      <div class="block">
+        <b>CVA, the settlement asset</b>
+        Settlement is in KUSDC, a CVA issued under our Issue Member scope through the documented Launch CVA path, after Cleanverse's Base faucet stopped dispensing aUSDC on 24 July. It carries the same <code>min_tier 5</code> rule as aUSDC and is gated identically on <strong>both</strong> sides of every transfer, inside <code>_update</code>, before any balance check. We can mint KUSDC. We cannot mint past a credential check. The gate is Cleanverse's, not ours.
+      </div>
+    </div>
+    <div>
+      <div class="block">
+        <b>CCP, the compliance gate</b>
+        KudiraPool is registered with the CVI Compliance Validator as a Pattern 2 single-contract lending pool. <code>complianceVerify(pool, wallet)</code> is read <strong>on-chain</strong> at origination alongside the REST <code>validator/verify</code> call, and the dashboard shows both answers for three wallets, one generated at the moment the button is pressed. If the two ever disagree the UI says so rather than picking one. <code>getRulesV2(pool)</code> returns <code>(0x0000, 0x0000, 5, 0, 0)</code> and <code>isRegistered(pool)</code> is true, so our policy is stored in Cleanverse's contract, not asserted by us.
+      </div>
+      <div class="block">
+        <b>Where the integration ends, and why</b>
+        Travel Rule reporting is bound to Cleanverse's indexed settlement flow. We proved a real customer-to-customer aUSDC transfer generates a report, and that a mint from <code>address(0)</code> never will because it has no originator. KUSDC sits outside the index, so the dashboard shows the live <code>TR_001</code> response and explains it rather than hiding it.
+      </div>
+    </div>
+  </div>
+
+  <h2>Deployed chains</h2>
+  <div class="cols">
+    <table>
+      <tr><td>KudiraPool</td><td>0x4a898781AFAd85BE7103126952BcBbFCCC24199e</td></tr>
+      <tr><td>CreditLine</td><td>0x49cD6c00EC00116Eed598b8e07f1B0D7A4805cBE</td></tr>
+      <tr><td>InstallmentPlan</td><td>0xb4c055e7e880A684F9276435BDc12d25577d39D8</td></tr>
+    </table>
+    <table>
+      <tr><td>MerchantRegistry</td><td>0x05e2A2473e710435484f6B3b288677618E95bB15</td></tr>
+      <tr><td>KUSDC (CVA)</td><td>0x036BCFeB3cfE93dfc47f5A935D7f663b99ACAb1E</td></tr>
+      <tr><td>CCP validator</td><td>0xaC7e5179C2C7f03f209136886c172eb34F161792</td></tr>
+    </table>
+  </div>
+  <p style="margin-top:6px">Base Sepolia, chainId 84532. 116 Foundry tests. Separation of duties on-chain: the operator can create debt but cannot add a payee or withdraw liquidity, and owner and operator are different keys. Contracts were also verified on Monad testnet before we moved to Base.</p>
+
+  <h2>Scalability</h2>
+  <p>Kudira is merchant-agnostic by construction. <code>MerchantRegistry</code> supports arbitrary merchants and origination takes the merchant as a parameter, so adding a shop is a credential plus a registry write, not a redeploy. Installment count and cadence are origination parameters rather than hardcoded product decisions, and a down payment at checkout is the same call with the first installment settled immediately, which is how first-time exposure gets bounded in production.</p>
+  <p>What scales next: an indexer in place of <code>planCount</code> iteration, self-serve merchant onboarding, per-merchant dashboard authentication, and a liquidity layer where third-party lenders fund the pool and earn on repayments. A first-time borrower's limit is currently seeded from their credential at origination, so the underwriting preview should read the A-Pass directly rather than the on-chain account.</p>
+
+  <div class="close">
+    Take CVI out and the limit has to be inferred from wallet history anyone can manufacture, one person opens unlimited wallets, and default costs a discarded keypair. Removing Cleanverse does not degrade Kudira. It deletes it.
+  </div>
+
+</div>
+</body>
+</html>
