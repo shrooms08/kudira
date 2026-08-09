@@ -83,7 +83,7 @@ export function Storefront() {
         </Card>
 
         <Card>
-          <Eyebrow>Due today</Eyebrow>
+          <Eyebrow>First payment</Eyebrow>
           <div style={{ marginTop: 12 }}>
             <Amount value={perInstallment} unit="KUSDC" size="hero" />
           </div>
