@@ -26,7 +26,7 @@ export const ACTORS = {
   owner: "0x021Fed3a7d7367B3d4Da7812B38355014AFc808F",
   operator: "0x0c9CE1fcd01C997A51442bB296FfC960C59bEfdd",
   merchant: "0xE8D7b7CEDC7b114D56E7828C7179c6a9b9EEe06D",
-  borrower: "0x09187143dDcbD329133a25f15B3913D2cEc88afd",
+  borrower: "0xbBa8dD4C19C8ca03E660a9fC7C944B15A3928bCA",
 } as const;
 
 export const MERCHANT_NAME = "Manila Coffee Roasters";
