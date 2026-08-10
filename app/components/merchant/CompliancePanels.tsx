@@ -184,14 +184,14 @@ function Verdict({ label, value }: { label: string; value: boolean | null }) {
   const on = value === true;
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
-      <div className="eyebrow" style={{ fontSize: 9.5, color: "var(--bone-42)" }}>
+      <div className="eyebrow" style={{ fontSize: "clamp(8px, 2.4vw, 9.5px)", color: "var(--bone-42)", whiteSpace: "nowrap" }}>
         {label}
       </div>
       <div
         className="num"
         style={{
           marginTop: 3,
-          fontSize: 14,
+          fontSize: "clamp(12px, 3.6vw, 14px)",
           fontWeight: 600,
           color: on ? "var(--signal)" : "var(--bone-62)",
         }}
@@ -355,9 +355,13 @@ export function ValidatorVerifyPanel() {
                   ) : null}
                 </div>
 
-                <div style={{ marginTop: 12, display: "flex", gap: 12 }}>
-                  <Verdict label="REST · validator/verify" value={r.restValid} />
-                  <Verdict label="on-chain · complianceVerify" value={r.chainValid} />
+                {/* REST vs on-chain stay side by side at every width — the whole
+                    point is the two independent checks visible at a glance. The
+                    methods (validator/verify, complianceVerify) are named in the
+                    intro copy; the verdict labels stay short so they never stack. */}
+                <div style={{ marginTop: 12, display: "flex", gap: 10 }}>
+                  <Verdict label="REST" value={r.restValid} />
+                  <Verdict label="on-chain" value={r.chainValid} />
                 </div>
 
                 {r.note ? (

@@ -49,7 +49,7 @@ export function Storefront() {
         </Link>
       </header>
 
-      <div style={{ maxWidth: 480, margin: "0 auto", padding: "20px", display: "grid", gap: 12 }}>
+      <div className="col col-consumer" style={{ padding: "20px", display: "grid", gap: 12 }}>
         <Card>
           <Eyebrow>Your bag</Eyebrow>
           <div style={{ marginTop: 14 }}>
@@ -115,9 +115,8 @@ export function Storefront() {
         }}
       >
         <div
+          className="col col-consumer"
           style={{
-            maxWidth: 480,
-            margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

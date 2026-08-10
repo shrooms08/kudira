@@ -165,7 +165,7 @@ export function CheckoutFlow({ amount }: { amount?: bigint }) {
         <span style={{ width: 40 }} />
       </header>
 
-      <div style={{ maxWidth: 480, margin: "0 auto", padding: "8px 20px", display: "grid", gap: 12 }}>
+      <div className="col col-checkout" style={{ padding: "8px 20px", display: "grid", gap: 12 }}>
         {/* Step 1: connect */}
         <Card>
           <Eyebrow>Step 1 of 3</Eyebrow>
@@ -387,7 +387,7 @@ export function CheckoutFlow({ amount }: { amount?: bigint }) {
 
       {/* Sticky pay bar. Solid on the black canvas — a figure never sits on glass. */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 40, background: "var(--raised)", borderTop: "1px solid var(--line-14)", padding: "14px 20px calc(14px + env(safe-area-inset-bottom))" }}>
-        <div style={{ maxWidth: 480, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+        <div className="col col-checkout" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
           <div style={{ fontFamily: mono, fontSize: 12, letterSpacing: "0.04em", color: "var(--bone-62)" }}>
             {originated
               ? "PLAN CREATED"

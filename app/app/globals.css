@@ -140,6 +140,42 @@ a {
   border-radius: var(--r-inner);
 }
 
+/* --- Responsive (the app is inline-styled; layout breakpoints live here) --- */
+
+/* Centred content columns. Consumer screens stay focused; checkout widens on
+   desktop so the credential card reaches its real card size, not a mobile card
+   marooned in a wide column. */
+.col {
+  max-width: 480px;
+  margin-inline: auto;
+}
+@media (min-width: 760px) {
+  .col-consumer {
+    max-width: 520px;
+  }
+  .col-checkout {
+    max-width: 620px;
+  }
+}
+
+/* Dashboard stat tiles: stacked on mobile, three-up once there is room. */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 560px) {
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Wide content (the settlements table) scrolls inside its own container rather
+   than pushing the page sideways. */
+.scroll-x {
+  overflow-x: auto;
+}
+
 /* --- Controls ------------------------------------------------------------- */
 
 .btn-accent {

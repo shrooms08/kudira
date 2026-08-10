@@ -26,7 +26,7 @@ export default async function AccountPage() {
         <Logo />
       </header>
 
-      <div style={{ maxWidth: 480, margin: "0 auto", padding: "8px 20px", display: "grid", gap: 12 }}>
+      <div className="col col-consumer" style={{ padding: "8px 20px", display: "grid", gap: 12 }}>
         <NextPayment plans={mine} />
         <StandingCard standing={standing} />
         <PlanList plans={active} title="Active plans" />

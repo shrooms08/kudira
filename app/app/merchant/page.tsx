@@ -71,7 +71,7 @@ export default async function MerchantDashboard() {
         </h1>
 
         {/* --- Stats ------------------------------------------------------ */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginTop: 24 }}>
+        <div className="stats" style={{ marginTop: 24 }}>
           <Card>
             <Eyebrow>Settled to you</Eyebrow>
             <div style={{ marginTop: 10 }}>
@@ -138,12 +138,13 @@ export default async function MerchantDashboard() {
             <p style={{ marginTop: 8, fontSize: 12.5, color: "var(--bone-62)" }}>
               Buyers are pseudonymous. Kudira never discloses identity to merchants.
             </p>
-            <div style={{ marginTop: 14 }}>
+            <div className="scroll-x" style={{ marginTop: 14 }}>
               <div
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr auto",
                   gap: 12,
+                  minWidth: 480,
                   paddingBottom: 8,
                   borderBottom: "1px solid var(--line-08)",
                 }}
@@ -166,6 +167,7 @@ export default async function MerchantDashboard() {
                       display: "grid",
                       gridTemplateColumns: "1fr 1fr 1fr auto",
                       gap: 12,
+                      minWidth: 480,
                       alignItems: "center",
                       padding: "12px 0",
                       borderBottom: "1px solid var(--line-08)",
