@@ -156,3 +156,24 @@ a {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* Motion (c): compliance rows stagger in, 120ms apart, on the one easing curve.
+   Apply .ku-stagger and set animation-delay per row. */
+@keyframes ku-stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ku-stagger {
+  animation: ku-stagger-in 420ms var(--ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ku-stagger {
+    animation: none;
+  }
+}

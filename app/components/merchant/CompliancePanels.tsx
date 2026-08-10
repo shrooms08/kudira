@@ -52,20 +52,20 @@ export function TravelRulePanel({ txHash }: { txHash: string }) {
           gap: 16,
         }}
       >
-        <div style={{ fontFamily: "var(--font-source-serif)", fontSize: 21, letterSpacing: "-0.02em" }}>
+        <div style={{ fontFamily: "var(--font-instrument-serif)", fontSize: 21, letterSpacing: "-0.02em" }}>
           Settlement {shortAddress(txHash, 6)}
         </div>
         <button
           onClick={run}
           disabled={loading}
-          className="btn-amber"
+          className="btn-accent"
           style={{ padding: "9px 18px", fontSize: 13, border: "none", cursor: "pointer" }}
         >
           {loading ? "Requesting…" : result ? "Request again" : "Request record"}
         </button>
       </div>
 
-      <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
+      <p style={{ marginTop: 8, fontSize: 13, color: "var(--bone-62)", lineHeight: 1.6 }}>
         Calls <span className="num">POST /download_travel_rule</span> against the live Cleanverse
         sandbox. Nothing here is mocked.
       </p>
@@ -77,8 +77,8 @@ export function TravelRulePanel({ txHash }: { txHash: string }) {
               style={{
                 padding: 14,
                 borderRadius: "var(--r-inner)",
-                background: "var(--paper-amber)",
-                border: "1px solid rgba(233,161,59,0.35)",
+                background: "var(--signal-14)",
+                border: "1px solid rgba(0,208,132,0.35)",
                 fontSize: 14,
               }}
             >
@@ -89,12 +89,12 @@ export function TravelRulePanel({ txHash }: { txHash: string }) {
               style={{
                 padding: 16,
                 borderRadius: "var(--r-inner)",
-                background: "var(--paper-sunk)",
-                border: "1px solid var(--ink-10)",
+                background: "var(--raised-2)",
+                border: "1px solid var(--line-09)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span className="num" style={{ fontSize: 11, color: "var(--ink-62)" }}>
+                <span className="num" style={{ fontSize: 11, color: "var(--bone-62)" }}>
                   {result.subCode ?? result.code}
                 </span>
                 <span style={{ fontSize: 15, fontWeight: 600 }}>
@@ -103,7 +103,7 @@ export function TravelRulePanel({ txHash }: { txHash: string }) {
               </div>
               {result.diagnosis ? (
                 <>
-                  <p style={{ marginTop: 10, fontSize: 13.5, lineHeight: 1.7, color: "var(--ink-72)" }}>
+                  <p style={{ marginTop: 10, fontSize: 13.5, lineHeight: 1.7, color: "var(--bone-75)" }}>
                     {result.diagnosis.detail}
                   </p>
                   {result.diagnosis.proof ? (
@@ -111,19 +111,19 @@ export function TravelRulePanel({ txHash }: { txHash: string }) {
                       style={{
                         marginTop: 12,
                         paddingTop: 12,
-                        borderTop: "1px solid var(--ink-08)",
+                        borderTop: "1px solid var(--line-08)",
                         fontSize: 12.5,
                         lineHeight: 1.7,
-                        color: "var(--ink-62)",
+                        color: "var(--bone-62)",
                       }}
                     >
-                      <strong style={{ color: "var(--ink-82)" }}>How we know: </strong>
+                      <strong style={{ color: "var(--bone-75)" }}>How we know: </strong>
                       {result.diagnosis.proof}
                     </p>
                   ) : null}
                 </>
               ) : (
-                <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-72)" }}>{result.message}</p>
+                <p style={{ marginTop: 8, fontSize: 13, color: "var(--bone-75)" }}>{result.message}</p>
               )}
             </div>
           )}
@@ -184,7 +184,7 @@ function Verdict({ label, value }: { label: string; value: boolean | null }) {
   const on = value === true;
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
-      <div className="eyebrow" style={{ fontSize: 9.5, color: "var(--ink-45)" }}>
+      <div className="eyebrow" style={{ fontSize: 9.5, color: "var(--bone-42)" }}>
         {label}
       </div>
       <div
@@ -193,7 +193,7 @@ function Verdict({ label, value }: { label: string; value: boolean | null }) {
           marginTop: 3,
           fontSize: 14,
           fontWeight: 600,
-          color: on ? "var(--amber-ink)" : "var(--ink-62)",
+          color: on ? "var(--signal)" : "var(--bone-62)",
         }}
       >
         {text}
@@ -237,20 +237,20 @@ export function ValidatorVerifyPanel() {
           gap: 16,
         }}
       >
-        <div style={{ fontFamily: "var(--font-source-serif)", fontSize: 21, letterSpacing: "-0.02em" }}>
+        <div style={{ fontFamily: "var(--font-instrument-serif)", fontSize: 21, letterSpacing: "-0.02em" }}>
           Compliance Protocol rule
         </div>
         <button
           onClick={run}
           disabled={loading}
-          className="btn-amber"
+          className="btn-accent"
           style={{ padding: "9px 18px", fontSize: 13, border: "none", cursor: "pointer" }}
         >
           {loading ? "Checking…" : result ? "Check again" : "Run check"}
         </button>
       </div>
 
-      <p style={{ marginTop: 8, fontSize: 13, color: "var(--ink-62)", lineHeight: 1.6 }}>
+      <p style={{ marginTop: 8, fontSize: 13, color: "var(--bone-62)", lineHeight: 1.6 }}>
         Two independent answers to the same question, for each wallet:{" "}
         <span className="num">POST /validator/verify</span> (REST) and{" "}
         <span className="num">complianceVerify(pool, wallet)</span> read from the CCP validator at{" "}
@@ -267,17 +267,17 @@ export function ValidatorVerifyPanel() {
             style={{
               padding: 14,
               borderRadius: "var(--r-inner)",
-              background: "var(--paper-sunk)",
-              border: "1px solid var(--ink-10)",
+              background: "var(--raised-2)",
+              border: "1px solid var(--line-09)",
             }}
           >
             <Eyebrow>Our rule, stored on-chain</Eyebrow>
             <div className="num" style={{ marginTop: 8, fontSize: 12.5, lineHeight: 1.7 }}>
-              <div style={{ color: "var(--ink-55)" }}>
+              <div style={{ color: "var(--bone-55)" }}>
                 getRulesV2(pool) →{" "}
                 {result.onChain.rules.length ? (
                   result.onChain.rules.map((r, i) => (
-                    <span key={i} style={{ color: "var(--ink)" }}>
+                    <span key={i} style={{ color: "var(--bone)" }}>
                       {ruleTuple(r)}
                     </span>
                   ))
@@ -285,7 +285,7 @@ export function ValidatorVerifyPanel() {
                   <span>[]</span>
                 )}
               </div>
-              <div style={{ marginTop: 4, color: "var(--ink-45)" }}>
+              <div style={{ marginTop: 4, color: "var(--bone-42)" }}>
                 (allowedGroup, allowedSubGroup, minTier, minSubTier, poolCountryBitmap) · isRegistered:{" "}
                 {String(result.onChain.registered)}
               </div>
@@ -298,9 +298,9 @@ export function ValidatorVerifyPanel() {
               style={{
                 padding: 14,
                 borderRadius: "var(--r-inner)",
-                background: "#3a1512",
-                border: "1px solid #d9694f",
-                color: "#ffd9cf",
+                background: "rgba(255,107,74,0.1)",
+                border: "1px solid var(--warn)",
+                color: "var(--bone)",
               }}
             >
               <div style={{ fontSize: 14, fontWeight: 700 }}>REST and on-chain DISAGREE</div>
@@ -312,20 +312,22 @@ export function ValidatorVerifyPanel() {
             </div>
           ) : null}
 
-          {result.results.map((r) => {
+          {result.results.map((r, i) => {
             const disagree = r.agree === false;
             const both = r.restValid === true && r.chainValid === true;
             return (
               <div
-                key={r.address}
+                key={`${r.address}-${result.checkedAt}`}
+                className="ku-stagger"
                 style={{
+                  animationDelay: `${i * 120}ms`,
                   padding: 14,
                   borderRadius: "var(--r-inner)",
-                  background: disagree ? "#3a1512" : both ? "var(--paper-amber)" : "var(--paper-sunk)",
+                  background: disagree ? "rgba(255,107,74,0.1)" : both ? "var(--signal-14)" : "var(--raised-2)",
                   border: `1px solid ${
-                    disagree ? "#d9694f" : both ? "rgba(233,161,59,0.35)" : "var(--ink-10)"
+                    disagree ? "var(--warn)" : both ? "rgba(0,208,132,0.35)" : "var(--line-09)"
                   }`,
-                  color: disagree ? "#ffd9cf" : undefined,
+                  color: disagree ? "var(--bone)" : undefined,
                 }}
               >
                 <div
@@ -337,7 +339,7 @@ export function ValidatorVerifyPanel() {
                       className="num"
                       style={{
                         fontSize: 11.5,
-                        color: disagree ? "#ffb9a8" : "var(--ink-55)",
+                        color: disagree ? "var(--bone-62)" : "var(--bone-55)",
                         marginTop: 2,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -364,7 +366,7 @@ export function ValidatorVerifyPanel() {
                       marginTop: 10,
                       fontSize: 12.5,
                       lineHeight: 1.6,
-                      color: disagree ? "#ffd9cf" : "var(--ink-62)",
+                      color: disagree ? "var(--bone)" : "var(--bone-62)",
                     }}
                   >
                     {r.note}
@@ -372,14 +374,14 @@ export function ValidatorVerifyPanel() {
                 ) : null}
                 <div
                   className="num"
-                  style={{ marginTop: 8, fontSize: 11.5, color: disagree ? "#ffb9a8" : "var(--ink-55)" }}
+                  style={{ marginTop: 8, fontSize: 11.5, color: disagree ? "var(--bone-62)" : "var(--bone-55)" }}
                 >
                   token rule: code {r.tokenCode ?? "—"} · {r.tokenMessage}
                 </div>
               </div>
             );
           })}
-          <div className="num" style={{ fontSize: 11, color: "var(--ink-45)" }}>
+          <div className="num" style={{ fontSize: 11, color: "var(--bone-42)" }}>
             checked {result.checkedAt}
           </div>
         </div>
@@ -411,9 +413,9 @@ export function TravelRuleReference({ amount }: { amount: bigint }) {
     ],
   ];
   return (
-    <Card style={{ background: "var(--paper-sunk)", boxShadow: "none", border: "1px dashed var(--ink-16)" }}>
+    <Card style={{ background: "var(--raised-2)", boxShadow: "none", border: "1px dashed var(--line-14)" }}>
       <Eyebrow>Reference — not live data</Eyebrow>
-      <p style={{ marginTop: 8, fontSize: 12.5, lineHeight: 1.6, color: "var(--ink-62)" }}>
+      <p style={{ marginTop: 8, fontSize: 12.5, lineHeight: 1.6, color: "var(--bone-62)" }}>
         The shape of the record this returns when settlement is in aUSDC. Shown from the design, not
         from the API, because our settlement asset is outside the index.
       </p>
@@ -427,10 +429,10 @@ export function TravelRuleReference({ amount }: { amount: bigint }) {
               alignItems: "center",
               gap: 16,
               padding: "10px 0",
-              borderTop: i === 0 ? "none" : "1px solid var(--ink-08)",
+              borderTop: i === 0 ? "none" : "1px solid var(--line-08)",
             }}
           >
-            <span className="eyebrow" style={{ color: "var(--ink-55)" }}>
+            <span className="eyebrow" style={{ color: "var(--bone-55)" }}>
               {label}
             </span>
             <span style={{ fontSize: 13.5, textAlign: "right" }}>{value}</span>

@@ -32,11 +32,11 @@ export default async function MerchantDashboard() {
   const settledToYou = mine.reduce((acc, p) => acc + p.principal, 0n);
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--paper)" }}>
+    <main style={{ minHeight: "100vh", background: "var(--canvas)" }}>
       <header
         style={{
-          borderBottom: "1px solid var(--ink-08)",
-          background: "var(--white)",
+          borderBottom: "1px solid var(--line-08)",
+          background: "var(--raised)",
           padding: "16px 24px",
           display: "flex",
           alignItems: "center",
@@ -45,13 +45,13 @@ export default async function MerchantDashboard() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <Logo />
-          <nav style={{ display: "flex", gap: 20, fontSize: 13.5, color: "var(--ink-62)" }}>
-            <span style={{ color: "var(--ink)" }}>Overview</span>
+          <nav style={{ display: "flex", gap: 20, fontSize: 13.5, color: "var(--bone-62)" }}>
+            <span style={{ color: "var(--bone)" }}>Overview</span>
             <span>Settlements</span>
             <span>Compliance</span>
           </nav>
         </div>
-        <div style={{ fontSize: 13, color: "var(--ink-62)" }}>
+        <div style={{ fontSize: 13, color: "var(--bone-62)" }}>
           {MERCHANT_NAME} · <span className="num">SG/PH</span>
         </div>
       </header>
@@ -60,7 +60,7 @@ export default async function MerchantDashboard() {
         <Eyebrow>Kudira dashboard</Eyebrow>
         <h1
           style={{
-            fontFamily: "var(--font-source-serif)",
+            fontFamily: "var(--font-instrument-serif)",
             fontSize: 34,
             letterSpacing: "-0.02em",
             marginTop: 8,
@@ -77,7 +77,7 @@ export default async function MerchantDashboard() {
             <div style={{ marginTop: 10 }}>
               <Amount value={settledToYou} unit="KUSDC" size="large" />
             </div>
-            <p style={{ marginTop: 8, fontSize: 12, color: "var(--ink-62)", lineHeight: 1.5 }}>
+            <p style={{ marginTop: 8, fontSize: 12, color: "var(--bone-62)", lineHeight: 1.5 }}>
               Paid in full at checkout · 0 chargebacks
             </p>
           </Card>
@@ -85,9 +85,9 @@ export default async function MerchantDashboard() {
             <Eyebrow>Plans</Eyebrow>
             <div className="num" style={{ marginTop: 10, fontSize: 34, letterSpacing: "-0.04em" }}>
               {active}
-              <span style={{ fontSize: 17, color: "var(--ink-45)" }}> / {mine.length}</span>
+              <span style={{ fontSize: 17, color: "var(--bone-42)" }}> / {mine.length}</span>
             </div>
-            <p style={{ marginTop: 8, fontSize: 12, color: "var(--ink-62)", lineHeight: 1.5 }}>
+            <p style={{ marginTop: 8, fontSize: 12, color: "var(--bone-62)", lineHeight: 1.5 }}>
               {active} repaying, {settled} settled. Buyer credit risk sits with Kudira, not with you.
             </p>
           </Card>
@@ -96,7 +96,7 @@ export default async function MerchantDashboard() {
             <div style={{ marginTop: 10, fontSize: 27, letterSpacing: "-0.02em", fontWeight: 600 }}>
               Same tx
             </div>
-            <p style={{ marginTop: 8, fontSize: 12, color: "var(--ink-62)", lineHeight: 1.5 }}>
+            <p style={{ marginTop: 8, fontSize: 12, color: "var(--bone-62)", lineHeight: 1.5 }}>
               The payout is emitted inside the origination transaction, not queued after it.
             </p>
           </Card>
@@ -106,7 +106,7 @@ export default async function MerchantDashboard() {
         <div style={{ marginTop: 12 }}>
           <Card>
             <Eyebrow>Merchant onboarding</Eyebrow>
-            <p style={{ marginTop: 10, fontSize: 13.5, lineHeight: 1.7, color: "var(--ink-72)" }}>
+            <p style={{ marginTop: 10, fontSize: 13.5, lineHeight: 1.7, color: "var(--bone-75)" }}>
               Being paid takes two separate approvals. A Cleanverse credential lets this address{" "}
               <em>hold</em> the settlement asset. Registry activation lets the pool <em>pay</em> it.
               One without the other fails at origination.
@@ -125,7 +125,7 @@ export default async function MerchantDashboard() {
                 ok={merchant.active}
               />
             </div>
-            <div className="num" style={{ marginTop: 12, fontSize: 11.5, color: "var(--ink-45)" }}>
+            <div className="num" style={{ marginTop: 12, fontSize: 11.5, color: "var(--bone-42)" }}>
               payout {merchant.payout ? shortAddress(merchant.payout, 6) : "—"}
             </div>
           </Card>
@@ -135,7 +135,7 @@ export default async function MerchantDashboard() {
         <div style={{ marginTop: 12 }}>
           <Card>
             <Eyebrow>Settlements</Eyebrow>
-            <p style={{ marginTop: 8, fontSize: 12.5, color: "var(--ink-62)" }}>
+            <p style={{ marginTop: 8, fontSize: 12.5, color: "var(--bone-62)" }}>
               Buyers are pseudonymous. Kudira never discloses identity to merchants.
             </p>
             <div style={{ marginTop: 14 }}>
@@ -145,7 +145,7 @@ export default async function MerchantDashboard() {
                   gridTemplateColumns: "1fr 1fr 1fr auto",
                   gap: 12,
                   paddingBottom: 8,
-                  borderBottom: "1px solid var(--ink-08)",
+                  borderBottom: "1px solid var(--line-08)",
                 }}
               >
                 {["Buyer", "Plan", "Progress", "Amount"].map((h) => (
@@ -155,7 +155,7 @@ export default async function MerchantDashboard() {
                 ))}
               </div>
               {mine.length === 0 ? (
-                <p style={{ padding: "16px 0", fontSize: 13, color: "var(--ink-55)" }}>
+                <p style={{ padding: "16px 0", fontSize: 13, color: "var(--bone-55)" }}>
                   No settlements yet.
                 </p>
               ) : (
@@ -168,17 +168,17 @@ export default async function MerchantDashboard() {
                       gap: 12,
                       alignItems: "center",
                       padding: "12px 0",
-                      borderBottom: "1px solid var(--ink-08)",
+                      borderBottom: "1px solid var(--line-08)",
                       fontSize: 13.5,
                     }}
                   >
-                    <span className="num" style={{ color: "var(--ink-72)" }}>
+                    <span className="num" style={{ color: "var(--bone-75)" }}>
                       {shortAddress(p.borrower)}
                     </span>
-                    <span className="num" style={{ color: "var(--ink-62)" }}>
+                    <span className="num" style={{ color: "var(--bone-62)" }}>
                       KU-{String(p.id).padStart(4, "0")}
                     </span>
-                    <span style={{ color: "var(--ink-62)" }}>
+                    <span style={{ color: "var(--bone-62)" }}>
                       <span className="num">
                         {p.installmentsCovered} of {p.installments}
                       </span>{" "}
@@ -191,7 +191,7 @@ export default async function MerchantDashboard() {
                 ))
               )}
             </div>
-            <div className="num" style={{ marginTop: 12, fontSize: 11.5, color: "var(--ink-45)" }}>
+            <div className="num" style={{ marginTop: 12, fontSize: 11.5, color: "var(--bone-42)" }}>
               settled via this pool {formatAmount(settledToYou)} KUSDC · wallet holds{" "}
               {formatAmount(received)}, which includes earlier rehearsal runs
             </div>
@@ -199,10 +199,10 @@ export default async function MerchantDashboard() {
               style={{
                 marginTop: 14,
                 paddingTop: 12,
-                borderTop: "1px solid var(--ink-08)",
+                borderTop: "1px solid var(--line-08)",
                 fontSize: 12.5,
                 lineHeight: 1.6,
-                color: "var(--ink-62)",
+                color: "var(--bone-62)",
               }}
             >
               A merchant&apos;s exposure ends at settlement. Plan progress is shown here for
@@ -217,7 +217,7 @@ export default async function MerchantDashboard() {
           <Eyebrow>Compliance</Eyebrow>
           <h2
             style={{
-              fontFamily: "var(--font-source-serif)",
+              fontFamily: "var(--font-instrument-serif)",
               fontSize: 27,
               letterSpacing: "-0.02em",
               marginTop: 8,
@@ -226,7 +226,7 @@ export default async function MerchantDashboard() {
           >
             What works, where it ends, and why
           </h2>
-          <p style={{ marginTop: 8, fontSize: 13.5, lineHeight: 1.7, color: "var(--ink-68)" }}>
+          <p style={{ marginTop: 8, fontSize: 13.5, lineHeight: 1.7, color: "var(--bone-62)" }}>
             Both panels call the live Cleanverse sandbox when you press the button. Neither is
             mocked, including the one that fails.
           </p>
@@ -239,7 +239,7 @@ export default async function MerchantDashboard() {
         </div>
 
         {/* --- Footer facts ------------------------------------------------ */}
-        <div style={{ marginTop: 28, fontSize: 11.5, lineHeight: 1.8, color: "var(--ink-45)" }} className="num">
+        <div style={{ marginTop: 28, fontSize: 11.5, lineHeight: 1.8, color: "var(--bone-42)" }} className="num">
           <div>
             pool{" "}
             <a href={explorerAddress(ADDRESSES.pool)} target="_blank" rel="noreferrer">
@@ -279,15 +279,15 @@ function OnboardStep({
       style={{
         padding: 14,
         borderRadius: "var(--r-inner)",
-        background: ok ? "var(--paper-amber)" : "var(--paper-sunk)",
-        border: `1px solid ${ok ? "rgba(233,161,59,0.35)" : "var(--ink-10)"}`,
+        background: ok ? "var(--signal-14)" : "var(--raised-2)",
+        border: `1px solid ${ok ? "rgba(0,208,132,0.35)" : "var(--line-09)"}`,
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline" }}>
         <span style={{ fontSize: 14, fontWeight: 600 }}>{label}</span>
-        <span style={{ fontSize: 13, color: ok ? "var(--amber-ink)" : "var(--ink-62)" }}>{value}</span>
+        <span style={{ fontSize: 13, color: ok ? "var(--signal)" : "var(--bone-62)" }}>{value}</span>
       </div>
-      <p style={{ marginTop: 6, fontSize: 12.5, lineHeight: 1.6, color: "var(--ink-62)" }}>{sub}</p>
+      <p style={{ marginTop: 6, fontSize: 12.5, lineHeight: 1.6, color: "var(--bone-62)" }}>{sub}</p>
     </div>
   );
 }
